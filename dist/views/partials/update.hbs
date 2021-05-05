@@ -1,0 +1,35 @@
+<body style="background-color: #d1ffe2;">
+    <div class="container p-4">
+        <div class="row">
+            <div class="col-md-4 mx-auto">
+                <div class="card text-center bg-dark">
+                    <div class="card-header bg-success">
+                        <h3>Id Usuario: {{usuario.Id}}</h3>
+                    </div>
+                    <div class="card-body bg-dark">
+                        <form action="../update/{{usuario.Id}}" method="post">
+                            <div class="form-group"> {{!-- Paso 24 --}}
+                                
+                                </br>{{!-- Paso 14 --}}
+                                <input class="form-control" type="text" name="nombre" placeholder="Nuevo Usuario" value="{{usuario.Usuario}}" autofocus>
+                                <!--name: nombre de la variable, placeholder: etiqueta-->
+                                </br>
+                                <input class="form-control" type="password" name="password" placeholder="Nueva Contraseña">
+                                </br>
+                                 <input class="form-control" type="email" name="email" placeholder="Nuevo Email" value="{{usuario.Email}}">                                 
+                                </br>
+                                 <select class="form-control" name="perfil">
+                                   <option value="">Seleccionar el Nuevo Rol</option>
+                                   <option value="admin">Admin</option>
+                                   <option value="user">Usuario</option>                                                                                                           
+                                </select>
+                                </br>                                
+                                <button class="btn btn-primary btn-block">Guardar</button>                                              
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
