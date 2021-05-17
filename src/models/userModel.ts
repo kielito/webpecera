@@ -1,5 +1,6 @@
 import { createPool } from 'mysql2/promise';
-import bcryptjs from 'bcryptjs';
+//import bcryptjs from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 class UserModel {
 	private db: any;
@@ -72,13 +73,13 @@ class UserModel {
 	
 	//Encriptar Clave
 	encriptarPassword = async(password: string): Promise<string> => {
-        const salt = await bcryptjs.genSalt(10);
-        return await bcryptjs.hash(password, salt);
+        const salt = await bcrypt.genSalt(10);
+        return await bcrypt.hash(password, salt);
     }
 
 	//Compara la Clave ingresada vs la registrada
 	validarPassword = async function (password: string, passwordhash: string): Promise<boolean> {		
-        return await bcryptjs.compare(password, passwordhash);
+        return await bcrypt.compare(password, passwordhash);
     }
 }
 
