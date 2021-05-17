@@ -67,7 +67,7 @@ class Server {
     }
     start() {
         this.app.listen(this.app.get('port'), () => {
-            console.log("Server escuchando " + this.app.get('port'));
+            console.log("Server escuchando puerto " + this.app.get('port'));
         });
     }
 }
