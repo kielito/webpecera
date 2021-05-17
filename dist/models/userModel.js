@@ -13,18 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const promise_1 = require("mysql2/promise");
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 class UserModel {
     constructor() {
         //Encriptar Clave
         this.encriptarPassword = (password) => __awaiter(this, void 0, void 0, function* () {
-            const salt = yield bcrypt_1.default.genSaltSync(10);
-            return yield bcrypt_1.default.hashSync(password, salt);
+            const salt = yield bcryptjs_1.default.genSalt(10);
+            return yield bcryptjs_1.default.hash(password, salt);
         });
         //Compara la Clave ingresada vs la registrada
         this.validarPassword = function (password, passwordhash) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield bcrypt_1.default.compareSync(password, passwordhash);
+                return yield bcryptjs_1.default.compare(password, passwordhash);
             });
         };
         this.config(); //aplicamos la conexion con la BD.
@@ -32,6 +32,10 @@ class UserModel {
     config() {
         return __awaiter(this, void 0, void 0, function* () {
             this.db = yield promise_1.createPool({
+                /*host: 'localhost',
+                user: 'root',
+                password: '',
+                database: 'pecera',*/
                 host: 'us-cdbr-east-03.cleardb.com',
                 user: 'b0e0fd43ed8818',
                 password: '2b1f9d39',

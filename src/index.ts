@@ -5,10 +5,21 @@ import indexRoutes from './routes/indexRoutes';
 import exphbs from "express-handlebars";
 import path from "path";
 import userRoutes from './routes/userRoutes';
+import clientRoutes from './routes/clientRoutes';
+import supplierRoutes from './routes/supplierRoutes';
 import dotenv from 'dotenv';
+import session from "express-session";
+import flash from "connect-flash";
 
 dotenv.config(); //Para leer las varialbes de entorno (JWT)
 
+
+declare module 'express-session' { //Se redefine para declarar 2 variables (user y auth)
+	export interface SessionData {
+	  user: { [key: string]: any} | any;//en user guardaremos datos de interes
+	  auth: boolean //indicara si el usuario ha iniciado sesion o no.
+	}
+}
 
 class Server{
 	public app:Application;
@@ -19,6 +30,7 @@ class Server{
 		this.routes();
 	}
 	config():void{
+
 		//Configuraciones
 		this.app.set('port',process.env.PORT || 3000);
         this.app.set('views',path.join(__dirname,'views')); //indicamos que views esta en dist y no en el modulo principal
@@ -27,9 +39,10 @@ class Server{
 			layoutsDir: path.join(this.app.get('views'),'layouts'),
 			partialsDir: path.join(this.app.get('views'),'partials'),
 			extname: 'hbs', //definimos la extension de los archivos
-			helpers: require('./lib/handlebars') //definimos donde estan los helpers
+			//helpers: require('./lib/handlebars') //definimos donde estan los helpers
 		}));
 		this.app.set('view engine','.hbs'); //ejecutamos el modulo definido
+
 
         //Middlewares
         this.app.use(morgan('dev'));
@@ -37,14 +50,36 @@ class Server{
         this.app.use(express.json()); //habilitamos el intercambio de objetos json entre aplicaciones
         this.app.use(express.urlencoded({extended:true}));//Paso 21 - habilitamos para recibir datos a traves de formularios html.
 		//this.app.use(express.static('public'));
+		this.app.use(flash());
+
+		//configuracion del middeware de sesion
+		this.app.use(session({
+			secret:'secret_supersecret',//sirve para crear el hash del SSID unico
+			resave:false,//evita el guardado de sesion sin modificaciones
+			saveUninitialized:false //indica que no se guarde la sesion hasta que se inicialice
+		}));
+
 
 		// Archivos Publicos
 		this.app.use(express.static(path.join(__dirname, 'public'))); //metodo usado para indicar donde esta la carpeta public
 				
+
+		//Variables globales
+		this.app.use((req,res,next)=>{
+			//this.app.locals.error_session=req.flash('error_session');
+			this.app.locals.error =req.flash('error');
+			this.app.locals.confirmacion =req.flash('confirmacion');
+			this.app.locals.login = req.session.auth; //defino la veriable global para identificar cuando se loguea un usuario			
+			//aca defino otra variable para otro mensaje flash
+			next();
+		});
+
 	}
 	routes():void{
         this.app.use(indexRoutes);
 		this.app.use("/user",userRoutes); //user sera un objeto existene en la app.	
+		this.app.use("/cliente",clientRoutes); //user sera un objeto existene en la app.
+		this.app.use("/supplier",supplierRoutes); //user sera un objeto existene en la app.
 		
     }
 	start():void{

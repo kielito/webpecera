@@ -1,6 +1,5 @@
 import { createPool } from 'mysql2/promise';
-import bcrypt from 'bcrypt';
-import { response } from 'express';
+import bcryptjs from 'bcryptjs';
 
 class UserModel {
 	private db: any;
@@ -10,10 +9,14 @@ class UserModel {
 
 	async config() {//Parametro de conexion con la BD.
 		this.db = await createPool({
+			/*host: 'localhost',
+			user: 'root',
+			password: '',
+			database: 'pecera',*/
 			host: 'us-cdbr-east-03.cleardb.com',
 			user: 'b0e0fd43ed8818',
-			password:'2b1f9d39',
-			database: 'heroku_4505cc56058eb11',	
+			password: '2b1f9d39',
+			database: 'heroku_4505cc56058eb11',
 			connectionLimit: 10 //es una idea de conexiones, el limete dependera de la carga que tenga el servidor
 		});
 	}
@@ -69,13 +72,13 @@ class UserModel {
 	
 	//Encriptar Clave
 	encriptarPassword = async(password: string): Promise<string> => {
-        const salt = await bcrypt.genSaltSync(10);
-        return await bcrypt.hashSync(password, salt);
+        const salt = await bcryptjs.genSalt(10);
+        return await bcryptjs.hash(password, salt);
     }
 
 	//Compara la Clave ingresada vs la registrada
 	validarPassword = async function (password: string, passwordhash: string): Promise<boolean> {		
-        return await bcrypt.compareSync(password, passwordhash);
+        return await bcryptjs.compare(password, passwordhash);
     }
 }
 

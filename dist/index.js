@@ -10,7 +10,11 @@ const indexRoutes_1 = __importDefault(require("./routes/indexRoutes"));
 const express_handlebars_1 = __importDefault(require("express-handlebars"));
 const path_1 = __importDefault(require("path"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const clientRoutes_1 = __importDefault(require("./routes/clientRoutes"));
+const supplierRoutes_1 = __importDefault(require("./routes/supplierRoutes"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const express_session_1 = __importDefault(require("express-session"));
+const connect_flash_1 = __importDefault(require("connect-flash"));
 dotenv_1.default.config(); //Para leer las varialbes de entorno (JWT)
 class Server {
     constructor() {
@@ -26,8 +30,8 @@ class Server {
             defaultLayout: 'main',
             layoutsDir: path_1.default.join(this.app.get('views'), 'layouts'),
             partialsDir: path_1.default.join(this.app.get('views'), 'partials'),
-            extname: 'hbs',
-            helpers: require('./lib/handlebars') //definimos donde estan los helpers
+            extname: 'hbs', //definimos la extension de los archivos
+            //helpers: require('./lib/handlebars') //definimos donde estan los helpers
         }));
         this.app.set('view engine', '.hbs'); //ejecutamos el modulo definido
         //Middlewares
@@ -36,12 +40,30 @@ class Server {
         this.app.use(express_1.default.json()); //habilitamos el intercambio de objetos json entre aplicaciones
         this.app.use(express_1.default.urlencoded({ extended: true })); //Paso 21 - habilitamos para recibir datos a traves de formularios html.
         //this.app.use(express.static('public'));
+        this.app.use(connect_flash_1.default());
+        //configuracion del middeware de sesion
+        this.app.use(express_session_1.default({
+            secret: 'secret_supersecret',
+            resave: false,
+            saveUninitialized: false //indica que no se guarde la sesion hasta que se inicialice
+        }));
         // Archivos Publicos
         this.app.use(express_1.default.static(path_1.default.join(__dirname, 'public'))); //metodo usado para indicar donde esta la carpeta public
+        //Variables globales
+        this.app.use((req, res, next) => {
+            //this.app.locals.error_session=req.flash('error_session');
+            this.app.locals.error = req.flash('error');
+            this.app.locals.confirmacion = req.flash('confirmacion');
+            this.app.locals.login = req.session.auth; //defino la veriable global para identificar cuando se loguea un usuario			
+            //aca defino otra variable para otro mensaje flash
+            next();
+        });
     }
     routes() {
         this.app.use(indexRoutes_1.default);
         this.app.use("/user", userRoutes_1.default); //user sera un objeto existene en la app.	
+        this.app.use("/cliente", clientRoutes_1.default); //user sera un objeto existene en la app.
+        this.app.use("/supplier", supplierRoutes_1.default); //user sera un objeto existene en la app.
     }
     start() {
         this.app.listen(this.app.get('port'), () => {

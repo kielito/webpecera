@@ -12,7 +12,6 @@ class IndexRoutes {
         });
     }
 }
-//Exportamos el enrutador
 const indexRoutes = new IndexRoutes();
 exports.default = indexRoutes.router;
 //# sourceMappingURL=indexRoutes.js.map

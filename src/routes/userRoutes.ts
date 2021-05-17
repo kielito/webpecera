@@ -1,6 +1,9 @@
 import { Router, Request, Response } from 'express';
 import userController from '../controller/userController'; //ruta relativa
+import { validateRequestSchema } from '../lib/validation';
+import { registerSchema } from '../lib/register-schema';
 import { TokenValidation } from '../lib/verifyToken';
+
 
 class UserRoutes{
 	public router: Router = Router();
@@ -20,7 +23,7 @@ class UserRoutes{
         //this.router.use(auth);
        
 		this.router.get('/signup',userController.signup);
-		this.router.post('/signup',userController.addUser);
+		this.router.post('/signup',registerSchema,validateRequestSchema,userController.addUser);
 
         //Home del usuario		        
         this.router.get('/home', /*TokenValidation,*/ userController.home);
@@ -40,8 +43,12 @@ class UserRoutes{
         //Fin CRUD
 
         //CONTROL
-        this.router.get('/control',/*TokenValidation,*/ userController.control);
-        this.router.post('/procesar',/*TokenValidation,*/ userController.procesar);
+        this.router.get('/users', /*TokenValidation,*/ userController.users);
+        this.router.post('/procesar', /*TokenValidation,*/ userController.procesar);
+
+        
+        //CIERRE DE SESION
+        this.router.get('/salir',userController.endSession);
 	}
 }
 

@@ -15,50 +15,66 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const userModel_1 = __importDefault(require("../models/userModel"));
 class UserController {
     signin(req, res) {
-        res.render("partials/signinForm");
+        res.render("partials/user/signinForm");
     }
     login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { usuario, password } = req.body;
             const result = yield userModel_1.default.buscarNombre(usuario);
-            if (!result)
-                return res.status(400).json('User no exists!!');
-            const correctPassword = yield userModel_1.default.validarPassword(password, result.Password);
-            if (correctPassword) {
-                //JWT
-                /*const token: string = jwt.sign({_id: result.Id}, process.env.TOKEN_SECRET || 'tokentest', {
-                    expiresIn: '1d' //vence en un dia
-                })
-    
-                process.env.token_user = token;
-                req.headers.authorization = process.env.token_user;
-                
-                console.log(token);
-                
-                res.header('auth-token', process.env.token_user);
-                res.redirect("./home");
-                return;*/
-                //JWT
-                //CORRECTO!            
-                res.redirect("./home");
-                //res.render('partials/home');
-                return;
+            if (!result) {
+                req.flash('error', 'El Usuario no se encuentra registrado');
+                return res.redirect("./signin");
             }
-            return res.status(400).json('Clave Incorrecta!!');
+            else {
+                const correctPassword = yield userModel_1.default.validarPassword(password, result.Password);
+                if (correctPassword) {
+                    //JWT
+                    /*const token: string = jwt.sign({_id: result.Id}, process.env.TOKEN_SECRET || 'tokentest', {
+                        expiresIn: '1d' //vence en un dia
+                    })
+    
+                    //process.env.token_user = token;
+                    //req.headers.authorization = process.env.token_user;
+                    
+                    //console.log(token);
+                    
+                    res.header('auth-token', token);
+                    //res.render('partials/home');
+                    res.redirect("./home");
+                    return;*/
+                    //JWT
+                    //CORRECTO!
+                    req.session.user = result;
+                    req.session.auth = true;
+                    req.flash('confirmacion', 'Bienvenido ' + result.Nombre + '!!');
+                    res.redirect("./home");
+                    //res.render('partials/home');
+                    return;
+                }
+                else {
+                    req.flash('error', 'Password Incorrecto');
+                    res.redirect("./signin");
+                }
+            }
         });
     }
     //REGISTRO
     signup(req, res) {
-        res.render("partials/signupForm");
+        res.render("partials/user/signupForm");
     }
     home(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            //JWT
+            //JWT en Authotization
             /*res.header('Authorization', process.env.token_user);
             console.log(process.env.token_user)
+            
             console.log(req.header('auth-token'))*/
-            const usuarios = yield userModel_1.default.listar();
-            res.render('partials/home', { users: usuarios });
+            //JWT en auth-token
+            if (!req.session.auth) {
+                req.flash('error', 'Debes iniciar sesion para ver esta seccion!');
+                res.redirect("./signin");
+            }
+            res.render("partials/user/home");
         });
     }
     //CRUD
@@ -80,60 +96,88 @@ class UserController {
     addUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const usuario = req.body;
+            if (usuario.password.length === 0) {
+                req.flash('error', 'Debe ingresar una clave!');
+                return res.redirect("./signup");
+            }
+            if (usuario.password !== usuario.repassword) {
+                req.flash('error', 'Verifique la clave ingresada!');
+                return res.redirect("./signup");
+            }
             delete usuario.repassword;
             usuario.password = yield userModel_1.default.encriptarPassword(usuario.password);
             const busqueda = yield userModel_1.default.buscarNombre(usuario.usuario);
             if (!busqueda) {
                 const result = yield userModel_1.default.crear(usuario);
-                return res.json({ message: 'User saved!!' });
+                if (!result)
+                    res.status(404).json({ text: "No se pudo crear el usuario" });
+                req.flash('confirmacion', 'Usuario Registrado correctamente!');
+                return res.redirect("./users");
             }
-            return res.json({ message: 'User existsss!!' });
+            req.flash('error', 'El usuario y/o email ya se encuentra registrado!');
+            return res.redirect("./signup");
         });
     }
     update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (!req.session.auth) {
+                req.flash('error', 'Debe iniciar sesion para ver esta seccion');
+                res.redirect("../signin");
+            }
             const { id } = req.params;
             const usuario = yield userModel_1.default.buscarId(id);
-            if (req.body.password === "") {
-                return res.json({ message: 'La clave no puede estar vacía!' });
+            req.body.password = yield userModel_1.default.encriptarPassword(req.body.password);
+            const result = yield userModel_1.default.actualizar(req.body, id);
+            if (result) {
+                req.flash('confirmacion', 'Usuario "' + req.body.usuario + '" actualizado correctamente!');
+                return res.redirect("../users");
             }
-            if (req.body.rol === "") {
-                return res.json({ message: 'Debe seleccionar un Nuevo Rol!' });
-            }
-            else {
-                req.body.password = yield userModel_1.default.encriptarPassword(req.body.password);
-                const result = yield userModel_1.default.actualizar(req.body, id);
-                if (result) {
-                    return res.json({ message: 'Usuario actualizado correctamente!' });
-                }
-                return res.json({ message: 'El usuario y/o email ya se encuentra registrado!' });
-            }
+            req.flash('error', 'El usuario y/o email ya se encuentra registrado!');
+            return res.render("partials/user/update", { usuario, home: req.session.user, mi_session: true });
         });
     }
     delete(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params; // hacemos detrucsturing y obtenemos el ID. Es decir, obtenemos una parte de un objeto JS.
+            if (!req.session.auth) {
+                req.flash('error', 'Debe iniciar sesion para ver esta seccion');
+                res.redirect("../signin");
+            }
+            const { id } = req.params;
             const result = yield userModel_1.default.eliminar(id);
-            const usuarios = yield userModel_1.default.listar();
-            res.render('partials/controls', { users: usuarios });
+            req.flash('confirmacion', 'Se eliminó el Usuario correctamente!');
+            res.redirect('../users');
         });
     }
     //FIN CRUD
-    control(req, res) {
+    users(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (!req.session.auth) {
+                req.flash('error', 'Debe iniciar sesion para ver esta seccion');
+                res.redirect("./signin");
+            }
             const usuarios = yield userModel_1.default.listar();
-            const users = usuarios;
-            res.render('partials/controls', { users: usuarios });
+            res.render('partials/user/users', { users: usuarios, mi_session: true });
         });
     }
     procesar(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params; // hacemos detrucsturing y obtenemos el ID. Es decir, obtenemos una parte de un objeto JS.
+            if (!req.session.auth) {
+                req.flash('error', 'Debes iniciar sesion para ver esta seccion');
+                return res.redirect("../signin");
+            }
+            const { id } = req.params;
             const usuario = yield userModel_1.default.buscarId(id);
             if (usuario !== undefined) {
-                res.render("partials/update", { usuario });
+                res.render("partials/user/update", { usuario, home: req.session.user, mi_session: true });
             }
         });
+    }
+    //METODO PARA CERRAR LA SESION
+    endSession(req, res) {
+        req.session.user = {}; //Se borran los datos del usuarios guardados en la variable user
+        req.session.auth = false; //Se pone autenticado en false
+        req.session.destroy(() => console.log("Sesion finalizada")); //Metodo para destruir datos asociados a la sesion
+        res.redirect("/");
     }
 }
 const userController = new UserController();

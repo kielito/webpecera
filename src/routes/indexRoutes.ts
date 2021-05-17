@@ -12,6 +12,5 @@ class IndexRoutes{
     }
 }
 
-//Exportamos el enrutador
 const indexRoutes = new IndexRoutes();
 export default indexRoutes.router;
