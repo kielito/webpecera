@@ -17,8 +17,8 @@ El proyecto para la empresa Pecera S.A., es un prototipo inicial que busca brind
 
 Restricciones de Diseño<br>
 •	El uso del software requiere de conexión a internet.<br>
-•	Debe usarse ANGULAR como framework Javascript en el back-end.<br>
-•	Debe usarse NODEJS en el front-end para la construcción del API que reciba las peticiones del cliente (Front-end).<br>
+•	Debe usarse ANGULAR como framework Javascript en el front-end.<br>
+•	Debe usarse NODEJS en el front-end para la construcción del API que reciba las peticiones del cliente (back-end).<br>
 •	La comunicación entre cliente y servidor deberá establecerse a través de protocolos HTTP.<br>
 •	Debe usarse Bootstrap para que sea responsive.<br>
 •	JQUERY.<br>
