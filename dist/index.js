@@ -11,6 +11,7 @@ const express_handlebars_1 = __importDefault(require("express-handlebars"));
 const path_1 = __importDefault(require("path"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const clientRoutes_1 = __importDefault(require("./routes/clientRoutes"));
+const productRoutes_1 = __importDefault(require("./routes/productRoutes"));
 const supplierRoutes_1 = __importDefault(require("./routes/supplierRoutes"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_session_1 = __importDefault(require("express-session"));
@@ -56,12 +57,14 @@ class Server {
             this.app.locals.confirmacion = req.flash('confirmacion');
             this.app.locals.login = req.session.auth; //defino la veriable global para identificar cuando se loguea un usuario			
             //aca defino otra variable para otro mensaje flash
+            this.app.locals.producto_crud = req.flash('producto_crud');
             next();
         });
     }
     routes() {
         this.app.use(indexRoutes_1.default);
         this.app.use("/user", userRoutes_1.default); //user sera un objeto existene en la app.	
+        this.app.use("/product", productRoutes_1.default); //user sera un objeto existene en la app.	
         this.app.use("/cliente", clientRoutes_1.default); //user sera un objeto existene en la app.
         this.app.use("/supplier", supplierRoutes_1.default); //user sera un objeto existene en la app.
     }

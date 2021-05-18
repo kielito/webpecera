@@ -6,6 +6,7 @@ import exphbs from "express-handlebars";
 import path from "path";
 import userRoutes from './routes/userRoutes';
 import clientRoutes from './routes/clientRoutes';
+import productRoutes from './routes/productRoutes';
 import supplierRoutes from './routes/supplierRoutes';
 import dotenv from 'dotenv';
 import session from "express-session";
@@ -71,6 +72,7 @@ class Server{
 			this.app.locals.confirmacion =req.flash('confirmacion');
 			this.app.locals.login = req.session.auth; //defino la veriable global para identificar cuando se loguea un usuario			
 			//aca defino otra variable para otro mensaje flash
+			this.app.locals.producto_crud = req.flash('producto_crud');		
 			next();
 		});
 
@@ -78,6 +80,7 @@ class Server{
 	routes():void{
         this.app.use(indexRoutes);
 		this.app.use("/user",userRoutes); //user sera un objeto existene en la app.	
+		this.app.use("/product",productRoutes); //user sera un objeto existene en la app.	
 		this.app.use("/cliente",clientRoutes); //user sera un objeto existene en la app.
 		this.app.use("/supplier",supplierRoutes); //user sera un objeto existene en la app.
 		
