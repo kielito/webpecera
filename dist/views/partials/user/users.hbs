@@ -2,7 +2,7 @@
     <BR>
     <table border="1" align="center">
         <theader> {{!-- Encabezado - th: para negrita --}}     
-        <th>ID</th>
+        <th style="visibility: hidden">ID</th>
         <th>Usuario</th>
         <th>Nombre</th>
         <th>Apellido</th>      
@@ -14,7 +14,7 @@
         </theader>
             {{#each users}}
         <tr>
-            <td>{{Id}}</td>
+            <td style="visibility: hidden">{{Id}}</td>
             <td>{{Usuario}}</td>
             <td>{{Nombre}}</td>
             <td>{{Apellido}}</td>
@@ -32,6 +32,7 @@
     </table>  
     <div align="center">
         <BR>
+        <button class="btn btn-info" onclick="window.location.href='signup';" align="center">Agregar</button>        
         <button class="btn btn-success" onclick="window.location.href='home';" align="center">Volver</button>
     </div>
 </body>

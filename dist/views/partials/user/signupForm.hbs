@@ -9,17 +9,25 @@
                     <div class="card-body bg-dark">
                         <form action="../user/signup" method="post">
                             <div class="form-group">
-                                <input type="text" name="usuario" placeholder="Usuario" class="form-control" autofocus>                                
+                                <input type="text" name="usuario" placeholder="Usuario" class="form-control" autofocus required>                                
                                 </br>
-                                <input type="text" name="nombre" placeholder="Nombre" class="form-control">                                
+                                <input type="text" name="nombre" placeholder="Nombre" class="form-control" required>                                
                                 </br>
-                                <input type="text" name="apellido" placeholder="Apellido" class="form-control">                                
+                                <input type="text" name="apellido" placeholder="Apellido" class="form-control" required>                                
                                 </br>
-                                <input type="password" name="password" placeholder="Contraseña" class="form-control">
+                                <input type="password" name="password" placeholder="Contraseña" class="form-control" required>
                                 </br>
-                                <input type="password" name="repassword" placeholder="Repetir Contraseña" class="form-control"> 
+                                <input type="password" name="repassword" placeholder="Repetir Contraseña" class="form-control" required> 
                                 </br>
-                                <input type="email" name="email" placeholder="Email" class="form-control">
+                                <input type="email" name="email" placeholder="Email" class="form-control" required>
+                                </br>
+                                <input type="text" name="legajo" placeholder="Legajo" class="form-control" required>
+                                </br>
+                                 <select class="form-control" name="perfil" required>
+                                   <option value="">Seleccionar el Rol</option>
+                                   <option value="Admin">Admin</option>
+                                   <option value="Usuario">Usuario</option>                                                                                                           
+                                </select>
                                 </br>
                                 <button class="btn btn-primary btn-block">Enviar</button>
                             </div>
@@ -29,4 +37,8 @@
             </div>
         </div>
     </div>
+        <div align="center">
+            <BR>        
+            <button class="btn btn-success" onclick="window.location.href='users';" align="center">Volver</button>
+        </div>
 </body>
