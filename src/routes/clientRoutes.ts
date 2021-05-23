@@ -18,7 +18,10 @@ class UserRoutes{
         this.router.get('/list',clientController.list);
         this.router.get('/find/:id',clientController.find);
         this.router.post('/add',clientController.addClient);
+       
+        this.router.get('/update',clientController.controlUpdate);
         this.router.put('/update/:id',clientController.update);
+
         this.router.delete('/delete/:id',clientController.delete);
         // FIN CRUD
 

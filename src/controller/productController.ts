@@ -1,8 +1,13 @@
 import { Request, Response } from 'express';
 import productModel from '../models/productModel';
 import flash from "connect-flash";
+import fs from 'fs';
+import csv from 'csv-parser';
+
+let variable = [];
 
 class CarController {    
+
     public showError(req: Request, res: Response) {
         res.render("partials/error");
         return;
@@ -12,7 +17,7 @@ class CarController {
     public async list(req: Request, res: Response) { 
         if (!req.session.auth) {            
             req.flash('error_session', 'Debes iniciar sesion para ver esta seccion');
-            res.redirect("./error");
+            res.redirect("../user/signin");
             return;        
         }
         else
@@ -81,14 +86,15 @@ class CarController {
 
     public async control(req: Request, res: Response) {
         // si no fue autenticado envialo a la ruta principal
-        if (!req.session.auth) {            
+        /*if (!req.session.auth) {            
             req.flash('error_session', 'Debes iniciar sesion para ver esta seccion');
-            res.redirect("./error");
+            res.redirect("../user/signin");
             return;
-        }
-        const productos = await productModel.listar();
-        const products = productos;
-        res.render('partials/producto/productos', { products: productos, mi_session: true });
+        }*/
+        const productos = await productModel.listar();        
+        const proveedores = await productModel.listarProveedor();
+        
+        res.render('partials/producto/productos', { products: productos, proveedor: proveedores,  mi_session: true });
         return;
     }
 
@@ -100,6 +106,31 @@ class CarController {
             console.log(auto);
         }
 	}   
+
+    //Carga CSV
+    public async leerCsv(req:Request,res:Response){  
+        fs.createReadStream("ejemplo.csv") // Abrir archivo
+        .pipe(csv({ separator: ';' })) // Pasarlo al parseador a través de una tubería
+        .on('data', (row) => variable.push(row) )
+        .on("end", () => {// Y al finalizar, terminar lo necesario
+        });      
+        res.redirect('./updatecsv');
+        return;
+	} 
+
+    public async updateCsv(req:Request,res:Response){        
+        console.log("Paso por Controller");
+        console.log(variable);
+
+        for (let i=0;i<variable.length;i++) {            
+            const id = variable[i].Id;
+            delete variable[i].Id;
+            await productModel.actualizarProductos(variable[i], id);
+        }
+        req.flash('confirmacion','Datos actualizados correctamente!');
+        res.redirect('./control');
+        return;
+	} 
 
     // Paso 8
     public endSession(req: Request, res: Response) {

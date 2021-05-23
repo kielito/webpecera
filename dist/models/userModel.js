@@ -13,19 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const promise_1 = require("mysql2/promise");
-//import bcryptjs from 'bcryptjs';
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 class UserModel {
     constructor() {
         //Encriptar Clave
         this.encriptarPassword = (password) => __awaiter(this, void 0, void 0, function* () {
-            const salt = yield bcrypt_1.default.genSalt(10);
-            return yield bcrypt_1.default.hash(password, salt);
+            const salt = yield bcryptjs_1.default.genSalt(10);
+            return yield bcryptjs_1.default.hash(password, salt);
         });
         //Compara la Clave ingresada vs la registrada
         this.validarPassword = function (password, passwordhash) {
             return __awaiter(this, void 0, void 0, function* () {
-                return yield bcrypt_1.default.compare(password, passwordhash);
+                return yield bcryptjs_1.default.compare(password, passwordhash);
             });
         };
         this.config(); //aplicamos la conexion con la BD.

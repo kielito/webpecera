@@ -57,6 +57,11 @@ class ClientController{
         res.render('partials/cliente/clients', { clients: clientes });		
 	}
 
+    public async controlUpdate(req:Request,res:Response){
+		//res.send('Controles');        
+        res.render('partials/cliente/clients');		
+	}
+
 	
 }
 

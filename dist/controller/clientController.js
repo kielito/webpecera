@@ -75,6 +75,12 @@ class ClientController {
             res.render('partials/cliente/clients', { clients: clientes });
         });
     }
+    controlUpdate(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            //res.send('Controles');        
+            res.render('partials/cliente/clients');
+        });
+    }
 }
 const clientController = new ClientController();
 exports.default = clientController;

@@ -13,6 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const productModel_1 = __importDefault(require("../models/productModel"));
+const fs_1 = __importDefault(require("fs"));
+const csv_parser_1 = __importDefault(require("csv-parser"));
+let variable = [];
 class CarController {
     showError(req, res) {
         res.render("partials/error");
@@ -23,7 +26,7 @@ class CarController {
         return __awaiter(this, void 0, void 0, function* () {
             if (!req.session.auth) {
                 req.flash('error_session', 'Debes iniciar sesion para ver esta seccion');
-                res.redirect("./error");
+                res.redirect("../user/signin");
                 return;
             }
             else {
@@ -95,14 +98,14 @@ class CarController {
     control(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             // si no fue autenticado envialo a la ruta principal
-            if (!req.session.auth) {
+            /*if (!req.session.auth) {
                 req.flash('error_session', 'Debes iniciar sesion para ver esta seccion');
-                res.redirect("./error");
+                res.redirect("../user/signin");
                 return;
-            }
+            }*/
             const productos = yield productModel_1.default.listar();
-            const products = productos;
-            res.render('partials/producto/productos', { products: productos, mi_session: true });
+            const proveedores = yield productModel_1.default.listarProveedor();
+            res.render('partials/producto/productos', { products: productos, proveedor: proveedores, mi_session: true });
             return;
         });
     }
@@ -114,6 +117,32 @@ class CarController {
                 res.render("partials/updateProducts", { auto });
                 console.log(auto);
             }
+        });
+    }
+    //Carga CSV
+    leerCsv(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            fs_1.default.createReadStream("ejemplo.csv") // Abrir archivo
+                .pipe(csv_parser_1.default({ separator: ';' })) // Pasarlo al parseador a través de una tubería
+                .on('data', (row) => variable.push(row))
+                .on("end", () => {
+            });
+            res.redirect('./updatecsv');
+            return;
+        });
+    }
+    updateCsv(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("Paso por Controller");
+            console.log(variable);
+            for (let i = 0; i < variable.length; i++) {
+                const id = variable[i].Id;
+                delete variable[i].Id;
+                yield productModel_1.default.actualizarProductos(variable[i], id);
+            }
+            req.flash('confirmacion', 'Datos actualizados correctamente!');
+            res.redirect('./control');
+            return;
         });
     }
     // Paso 8

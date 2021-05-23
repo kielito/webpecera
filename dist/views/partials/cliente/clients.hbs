@@ -1,6 +1,11 @@
 <body style="background-color: #d1ffe2;">
+    <div class="contenedor">        
+    <div style="width:70%;;margin-left:300px;">
+        <BR>
+        <h4>Listado de Clientes</h4>
+    </div>
     <BR>
-    <table border="1" align="center">
+    <table class="table table-striped" style="width:83%;;margin-left:300px;">
         <theader>
             <th>Id</th>
             <th>TipoDocumento</th>
@@ -26,7 +31,7 @@
             <td>{{Localidad}}</td>
             <td>{{Provincia}}</td>
             <td>{{CodigoPostal}}</td>       
-            <td><a class="btn btn-success" href="/client/update/{{id}}">Modificar</a><a class="btn btn-danger" href="/client/delete/{{id}}">Eliminar</a></td>
+            <td><a class="btn btn-success" href="/cliente/update/{{id}}">Modificar</a> <a class="btn btn-danger" href="/cliente/delete/{{id}}">Eliminar</a></td>
         </tr>
         {{else}}
         <tr>
@@ -34,10 +39,12 @@
         </tr>
         {{/each}}
     </table>
-
-    <div align="center">
-        <BR>
-        <button class="btn btn-info" onclick="window.location.href='#';" align="center">Agregar</button>
-        <button class="btn btn-success" onclick="window.location.href='http://localhost:3000/user/home';" align="center">Panel de Control</button>
+    <div style="width:80%;;margin-left:320px;">        
+        <div align="center">
+            <BR>
+            <button class="btn btn-info" onclick="window.location.href='#';" align="center">Agregar</button>
+            <button class="btn btn-success" onclick="window.location.href='http://localhost:3000/user/home';" align="center">Panel de Control</button>
+        </div>
     </div>
+</div>
 </body>

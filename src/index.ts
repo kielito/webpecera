@@ -72,7 +72,8 @@ class Server{
 			this.app.locals.confirmacion =req.flash('confirmacion');
 			this.app.locals.login = req.session.auth; //defino la veriable global para identificar cuando se loguea un usuario			
 			//aca defino otra variable para otro mensaje flash
-			this.app.locals.producto_crud = req.flash('producto_crud');		
+			this.app.locals.producto_crud = req.flash('producto_crud');
+
 			next();
 		});
 

@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const productController_1 = __importDefault(require("../controller/productController")); //ruta relativa
-// import { TokenValidation } from '../lib/verifyToken';
 class ProductRoutes {
     constructor() {
         this.router = express_1.Router();
@@ -24,6 +23,8 @@ class ProductRoutes {
         this.router.post('/update/:id', productController_1.default.update);
         this.router.delete('/delete/:id', productController_1.default.delete);
         this.router.get('/delete/:id', productController_1.default.delete);
+        this.router.get('/csv', productController_1.default.leerCsv);
+        this.router.get('/updatecsv', productController_1.default.updateCsv);
         //Fin CRUD
         //CONTROL        
         this.router.get('/control', productController_1.default.control); // renderiza a partials/controls    

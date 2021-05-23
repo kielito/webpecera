@@ -1,5 +1,4 @@
 import { createPool } from 'mysql2/promise';
-import bcrypt from 'bcrypt';
 import { response } from 'express';
 
 class ProductModel {
@@ -19,7 +18,13 @@ class ProductModel {
 	}
 
 	async listar() {//Devuelve todas las filas de la tabla producto		
-		const productos = await this.db.query('SELECT * FROM producto');		
+		const productos = await this.db.query('SELECT p.CodigoProducto, p.Descripcion, p.StockMinimo, pp.StockActual, pp.PrecioVenta, pv.RazonSocial FROM producto p INNER JOIN producto_proveedor pp ON p.Id = pp.IdProducto INNER JOIN proveedor pv ON pp.IdProveedor = pv.Id');
+		//devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
+		return productos[0];
+	}
+
+	async listarProveedor() {//Devuelve todas las filas de la tabla producto		
+		const productos = await this.db.query('SELECT RazonSocial AS Proveedor FROM proveedor');
 		//devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
 		return productos[0];
 	}
@@ -65,6 +70,12 @@ class ProductModel {
 
 	//Devuelve 1 si logro actualizar el producto indicado por id
 	async actualizar(producto: object, id: string) {
+		const result = (await this.db.query('UPDATE producto SET ? WHERE Id = ?', [producto, id]))[0].affectedRows;
+		console.log(result);
+		return result;
+	}
+	
+	async actualizarProductos(producto: object, id: string) {
 		const result = (await this.db.query('UPDATE producto SET ? WHERE Id = ?', [producto, id]))[0].affectedRows;
 		console.log(result);
 		return result;

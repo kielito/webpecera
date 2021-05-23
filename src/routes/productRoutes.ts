@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import productController from '../controller/productController'; //ruta relativa
 // import { TokenValidation } from '../lib/verifyToken';
+import { leerCSVSchema }  from '../lib/readfile';
 
 class ProductRoutes{
 	public router: Router = Router();
@@ -19,7 +20,9 @@ class ProductRoutes{
         this.router.get('/update/:id',productController.procesar); //dibujo la vista		
         this.router.post('/update/:id',productController.update);
         this.router.delete('/delete/:id',productController.delete);
-        this.router.get('/delete/:id',productController.delete);		
+        this.router.get('/delete/:id',productController.delete);
+        this.router.get('/csv', productController.leerCsv);
+        this.router.get('/updatecsv', productController.updateCsv);
         //Fin CRUD
         //CONTROL        
         this.router.get('/control',productController.control); // renderiza a partials/controls    

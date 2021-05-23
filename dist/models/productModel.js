@@ -27,7 +27,14 @@ class ProductModel {
     }
     listar() {
         return __awaiter(this, void 0, void 0, function* () {
-            const productos = yield this.db.query('SELECT * FROM producto');
+            const productos = yield this.db.query('SELECT p.CodigoProducto, p.Descripcion, p.StockMinimo, pp.StockActual, pp.PrecioVenta, pv.RazonSocial FROM producto p INNER JOIN producto_proveedor pp ON p.Id = pp.IdProducto INNER JOIN proveedor pv ON pp.IdProveedor = pv.Id');
+            //devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
+            return productos[0];
+        });
+    }
+    listarProveedor() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const productos = yield this.db.query('SELECT RazonSocial AS Proveedor FROM proveedor');
             //devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
             return productos[0];
         });
@@ -77,6 +84,13 @@ class ProductModel {
     }
     //Devuelve 1 si logro actualizar el producto indicado por id
     actualizar(producto, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = (yield this.db.query('UPDATE producto SET ? WHERE Id = ?', [producto, id]))[0].affectedRows;
+            console.log(result);
+            return result;
+        });
+    }
+    actualizarProductos(producto, id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = (yield this.db.query('UPDATE producto SET ? WHERE Id = ?', [producto, id]))[0].affectedRows;
             console.log(result);

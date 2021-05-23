@@ -42,7 +42,6 @@ class UserController{
                 //CORRECTO!
                 req.session.user=result;
                 req.session.auth=true;
-        
 
                 req.flash('confirmacion','Bienvenido ' + result.Nombre + '!!');
                 res.redirect("./home");

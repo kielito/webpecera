@@ -20,6 +20,7 @@ class UserRoutes {
         this.router.get('/list', clientController_1.default.list);
         this.router.get('/find/:id', clientController_1.default.find);
         this.router.post('/add', clientController_1.default.addClient);
+        this.router.get('/update', clientController_1.default.controlUpdate);
         this.router.put('/update/:id', clientController_1.default.update);
         this.router.delete('/delete/:id', clientController_1.default.delete);
         // FIN CRUD
