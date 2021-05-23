@@ -121,26 +121,38 @@ class CarController {
     }
     //Carga CSV
     leerCsv(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            fs_1.default.createReadStream("ejemplo.csv") // Abrir archivo
-                .pipe(csv_parser_1.default({ separator: ';' })) // Pasarlo al parseador a través de una tubería
-                .on('data', (row) => variable.push(row))
-                .on("end", () => {
-            });
-            res.redirect('./updatecsv');
-            return;
+        fs_1.default.createReadStream("ejemplo.csv") // Abrir archivo
+            .pipe(csv_parser_1.default({ separator: ';' })) // Pasarlo al parseador a través de una tubería
+            .on('data', (row) => variable.push(row))
+            .on("end", () => {
         });
+        res.redirect('./updatecsv');
+        return;
     }
     updateCsv(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("Paso por Controller");
-            console.log(variable);
+            let codigo = "";
+            let precio = "";
+            let razonsocial = "";
+            const cod_proveedor = [];
             for (let i = 0; i < variable.length; i++) {
-                const id = variable[i].Id;
-                delete variable[i].Id;
-                yield productModel_1.default.actualizarProductos(variable[i], id);
+                codigo = variable[i].CodigoProducto;
+                precio = variable[i].Precio;
+                razonsocial = variable[i].RazonSocial;
+                delete variable[i].CodigoProducto;
+                delete variable[i].Precio;
+                delete variable[i].RazonSocial;
+                const cod_proveedor = yield productModel_1.default.buscarProveedor(razonsocial);
+                console.log(cod_proveedor);
+                if (cod_proveedor !== undefined) {
+                    yield productModel_1.default.actualizarProductos(variable[i], codigo);
+                    yield productModel_1.default.actualizarPrecios(precio, codigo, cod_proveedor.Id);
+                }
             }
-            req.flash('confirmacion', 'Datos actualizados correctamente!');
+            if (variable.length > 0)
+                req.flash('confirmacion', 'Datos actualizados correctamente!');
+            else
+                req.flash('error', 'No se encontraron datos para actualizar!');
             res.redirect('./control');
             return;
         });

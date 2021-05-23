@@ -23,6 +23,7 @@ class ProductRoutes{
         this.router.get('/delete/:id',productController.delete);
         this.router.get('/csv', productController.leerCsv);
         this.router.get('/updatecsv', productController.updateCsv);
+        
         //Fin CRUD
         //CONTROL        
         this.router.get('/control',productController.control); // renderiza a partials/controls    

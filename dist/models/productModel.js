@@ -50,6 +50,15 @@ class ProductModel {
             return null;
         });
     }
+    buscarProveedor(razonSocial) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const encontrado = yield this.db.query('SELECT Id FROM proveedor WHERE RazonSocial = ?', [razonSocial]);
+            //Ojo la consulta devuelve una tabla de una fila. (Array de array) Hay que desempaquetar y obtener la unica fila al enviar
+            if (encontrado.length > 1)
+                return encontrado[0][0];
+            return null;
+        });
+    }
     //Devuelve un objeto cuya fila en la tabla producto coincide con CodigoProducto.
     //Si no la encuentra devuelve null
     buscarCodigoProducto(codigoProducto) {
@@ -92,7 +101,13 @@ class ProductModel {
     }
     actualizarProductos(producto, id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = (yield this.db.query('UPDATE producto SET ? WHERE Id = ?', [producto, id]))[0].affectedRows;
+            const result = (yield this.db.query('UPDATE producto SET ? WHERE CodigoProducto = ?', [producto, id]))[0].affectedRows;
+            return result;
+        });
+    }
+    actualizarPrecios(producto, id, id_proveedor) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = (yield this.db.query('UPDATE producto_proveedor INNER JOIN producto ON producto_proveedor.IdProducto = producto.Id SET PrecioVenta = ? WHERE producto.CodigoProducto = ? AND producto_proveedor.IdProveedor = ?', [producto, id, id_proveedor]))[0];
             console.log(result);
             return result;
         });
@@ -101,7 +116,6 @@ class ProductModel {
     eliminar(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const product = (yield this.db.query('DELETE FROM producto WHERE Id = ?', [id]))[0].affectedRows;
-            console.log(product);
             return product;
         });
     }

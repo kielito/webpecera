@@ -4,7 +4,7 @@ import flash from "connect-flash";
 import fs from 'fs';
 import csv from 'csv-parser';
 
-let variable = [];
+let variable:any = [];
 
 class CarController {    
 
@@ -108,29 +108,50 @@ class CarController {
 	}   
 
     //Carga CSV
-    public async leerCsv(req:Request,res:Response){  
+    public leerCsv(req:Request,res:Response){
         fs.createReadStream("ejemplo.csv") // Abrir archivo
         .pipe(csv({ separator: ';' })) // Pasarlo al parseador a través de una tubería
         .on('data', (row) => variable.push(row) )
         .on("end", () => {// Y al finalizar, terminar lo necesario
-        });      
+        });
+
         res.redirect('./updatecsv');
         return;
-	} 
+	}
 
-    public async updateCsv(req:Request,res:Response){        
-        console.log("Paso por Controller");
-        console.log(variable);
+    public async updateCsv(req:Request,res:Response){
+        let codigo = "";
+        let precio = "";
+        let razonsocial = ""; 
+        const cod_proveedor:any = []; 
 
-        for (let i=0;i<variable.length;i++) {            
-            const id = variable[i].Id;
-            delete variable[i].Id;
-            await productModel.actualizarProductos(variable[i], id);
+        for (let i=0;i<variable.length;i++) {  
+
+            codigo = variable[i].CodigoProducto;
+            precio = variable[i].Precio;
+            razonsocial = variable[i].RazonSocial;
+
+            delete variable[i].CodigoProducto;
+            delete variable[i].Precio;
+            delete variable[i].RazonSocial;
+
+            const cod_proveedor = await productModel.buscarProveedor(razonsocial);
+            
+            console.log(cod_proveedor);
+            if(cod_proveedor !== undefined){
+                await productModel.actualizarProductos(variable[i], codigo);
+                await productModel.actualizarPrecios(precio, codigo, cod_proveedor.Id);
+            }
         }
-        req.flash('confirmacion','Datos actualizados correctamente!');
+
+        if(variable.length > 0)
+                req.flash('confirmacion','Datos actualizados correctamente!');
+        else
+                req.flash('error', 'No se encontraron datos para actualizar!');
+
         res.redirect('./control');
         return;
-	} 
+	}
 
     // Paso 8
     public endSession(req: Request, res: Response) {

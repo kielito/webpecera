@@ -1,3 +1,3 @@
-Id;Descripcion;StockMinimo
-4;SHULET CARASSIUS AF N 3 X 40 GRS;10
-14;MARINA DELUXE AQ.KIT 75L;10
+CodigoProducto;Descripcion;StockMinimo;Precio;RazonSocial
+Alm-001;SHULET CARASSIUS AF N 3 X 40 GRS;33;3300;Quemero SA
+Alm-002;MARINA DELUXE AQ.KIT 75L;55;5500;Ciclon SA
