@@ -18,10 +18,6 @@ const csv_parser_1 = __importDefault(require("csv-parser"));
 let variable = [];
 var filename = "";
 class CarController {
-    showError(req, res) {
-        res.render("partials/error");
-        return;
-    }
     //CRUD
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,21 +27,18 @@ class CarController {
                 return;
             }
             else {
-                console.log(req.body);
                 const productos = yield productModel_1.default.listar();
-                console.log(productos);
                 return res.json(productos);
             }
         });
     }
     find(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.params.id);
             const { id } = req.params;
             const producto = yield productModel_1.default.buscarId(id);
-            if (producto)
-                return res.json(producto);
-            res.status(404).json({ text: "Product doesn't exists" });
+            if (!producto)
+                req.flash('error', 'El producto no existe!');
+            return res.json(producto);
         });
     }
     addProduct(req, res) {
@@ -57,12 +50,12 @@ class CarController {
             if (!busqueda) {
                 const result = yield productModel_1.default.crear(codigoProducto);
                 // alta de controls.hbs
-                req.flash('producto_crud', 'Producto creado.');
+                req.flash('confirmacion', 'Producto creado correctamente.');
                 res.redirect('../control');
                 return;
             }
             else {
-                req.flash('producto_crud', 'El producto ya existe.');
+                req.flash('error', 'El producto ya existe.');
                 res.redirect("../control");
                 return;
             }
@@ -74,12 +67,12 @@ class CarController {
             const producto = yield productModel_1.default.buscarId(id);
             const result = yield productModel_1.default.actualizar(req.body, id);
             if (result) {
-                req.flash('producto_crud', 'Producto Id:' + req.params.id + ', modificado.');
+                req.flash('confirmacion', 'Producto Id:' + req.params.id + ', modificado.');
                 res.redirect('../control');
                 return;
             }
             else {
-                req.flash('producto_crud', 'no se pudo modificar el Producto Id:' + req.params.id + '.');
+                req.flash('error', 'No se pudo modificar el Producto Id: ' + req.params.id + '.');
                 res.redirect('../control');
                 return;
             }
@@ -87,10 +80,9 @@ class CarController {
     }
     delete(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body);
-            const { id } = req.params; // hacemos detrucsturing y obtenemos el ID. Es decir, obtenemos una parte de un objeto JS.
+            const { id } = req.params;
             const result = yield productModel_1.default.eliminar(id);
-            req.flash('producto_crud', 'Producto Id:' + req.params.id + ', elminado.');
+            req.flash('confirmacion', 'Producto Id:' + req.params.id + ', elminado.');
             res.redirect('../control');
             return;
         });
@@ -98,7 +90,6 @@ class CarController {
     //FIN CRUD
     control(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // si no fue autenticado envialo a la ruta principal
             if (!req.session.auth) {
                 req.flash('error', 'Debes iniciar sesion para ver esta seccion');
                 res.redirect("../user/signin");
@@ -112,11 +103,10 @@ class CarController {
     }
     procesar(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params; // hacemos detrucsturing y obtenemos el ID. Es decir, obtenemos una parte de un objeto JS.
-            const auto = yield productModel_1.default.buscarId(id);
-            if (auto !== undefined) {
-                res.render("partials/updateProducts", { auto });
-                console.log(auto);
+            const { id } = req.params;
+            const producto = yield productModel_1.default.buscarId(id);
+            if (producto !== undefined) {
+                res.render("partials/updateProducts", { producto });
             }
         });
     }
@@ -129,21 +119,16 @@ class CarController {
     }
     uploadfile(req, res) {
         let error;
+        filename = "";
         if (req.files) {
+            console.log(req.files);
             var file = req.files.file;
             filename = file.name;
-            file.mv('./uploads/' + filename, function (err) {
-                error = err;
-            });
         }
         if (req.files !== null) {
-            if (error)
-                req.flash('error', 'No se cargó el archivo!');
-            else {
-                req.flash('confirmacion', 'Archivo cargado correctamente!');
-                res.redirect("./csv");
-                return;
-            }
+            req.flash('confirmacion', 'Archivo cargado correctamente!');
+            res.redirect("./csv");
+            return;
         }
         else
             req.flash('error', 'Debe seleccionar un archivo!');
@@ -152,12 +137,10 @@ class CarController {
     }
     leerCsv(req, res) {
         variable = [];
-        fs_1.default.createReadStream(filename) // Abrir archivo
-            .pipe(csv_parser_1.default({ separator: ';' })) // Pasarlo al parseador a través de una tubería
+        fs_1.default.createReadStream(filename)
+            .pipe(csv_parser_1.default({ separator: ';' }))
             .on('data', (row) => variable.push(row))
-            .on("end", () => {
-        });
-        console.log(variable);
+            .on("end", () => { });
         res.render("partials/producto/uploadfile", { archivo: variable });
         return;
     }
@@ -175,7 +158,6 @@ class CarController {
                 delete variable[i].Precio;
                 delete variable[i].RazonSocial;
                 const cod_proveedor = yield productModel_1.default.buscarProveedor(razonsocial);
-                console.log(cod_proveedor);
                 if (cod_proveedor !== undefined) {
                     yield productModel_1.default.actualizarProductos(variable[i], codigo);
                     yield productModel_1.default.actualizarPrecios(precio, codigo, cod_proveedor.Id);
@@ -189,9 +171,7 @@ class CarController {
             return;
         });
     }
-    // Paso 8
     endSession(req, res) {
-        console.log(req.body);
         req.session.user = {};
         req.session.auth = false;
         req.session.destroy(() => console.log("Session finalizada"));

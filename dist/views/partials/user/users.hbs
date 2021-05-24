@@ -1,38 +1,43 @@
 <body style="background-color: #d1ffe2;">
-    <BR>
-    <table border="1" align="center">
-        <theader> {{!-- Encabezado - th: para negrita --}}     
-        <th style="visibility: hidden">ID</th>
-        <th>Usuario</th>
-        <th>Nombre</th>
-        <th>Apellido</th>      
-        <th>Legajo</th>
-        <th>Email</th>
-        <th>Perfil</th>
-        <th>Editar</th>
-        <th>Eliminar</th>
-        </theader>
-            {{#each users}}
-        <tr>
-            <td style="visibility: hidden">{{Id}}</td>
-            <td>{{Usuario}}</td>
-            <td>{{Nombre}}</td>
-            <td>{{Apellido}}</td>
-            <td>{{Legajo}}</td>
-            <td>{{Email}}</td>
-            <td>{{Perfil}}</td>
-            <td><a class="btn btn-primary" href="/user/update/{{Id}}">Editar</a></td>
-            <td><a class="btn btn-danger" href="/user/delete/{{Id}}">Eliminar</a></td>
-        </tr>
-            {{else}}
-        <tr>
-            <td colspan="4">No hay mas filas</td>
-        </tr>
-            {{/each}}
-    </table>  
-    <div align="center">
+    <div class="contenedor">        
+        <div style="width:70%;margin-left:300px;">
+            <BR>
+            <h4>Listado de Usuarios</h4>
+        </div>
         <BR>
-        <button class="btn btn-info" onclick="window.location.href='signup';" align="center">Agregar</button>        
-        <button class="btn btn-success" onclick="window.location.href='home';" align="center">Volver</button>
+        <table class="table table-striped" style="width:88%;margin-left:200px;">
+            <theader>
+                <th style="visibility: hidden">ID</th>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Apellido</th>      
+                <th>Legajo</th>
+                <th>Email</th>
+                <th>Perfil</th>
+                <th>Accion</th>
+            </theader>
+                {{#each users}}
+            <tr>
+                <td style="visibility: hidden">{{Id}}</td>
+                <td>{{Usuario}}</td>
+                <td>{{Nombre}}</td>
+                <td>{{Apellido}}</td>
+                <td>{{Legajo}}</td>
+                <td>{{Email}}</td>
+                <td>{{Perfil}}</td>
+                <td><a class="btn btn-info" href="/user/update/{{Id}}">Editar</a> <a class="btn btn-danger" href="/user/delete/{{Id}}">Eliminar</a></td>
+            </tr>
+                {{else}}
+            <tr>
+                <td colspan="4">No hay mas filas</td>
+            </tr>
+                {{/each}}
+        </table>  
+        <div style="width:80%;;margin-left:320px;">
+            <div align="center">
+                <button class="btn btn-primary" onclick="window.location.href='signup';" align="center">Agregar</button>        
+                <button class="btn btn-success" onclick="window.location.href='home';" align="center">Volver</button>
+            </div>
+        </div>
     </div>
 </body>

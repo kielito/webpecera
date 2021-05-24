@@ -3,41 +3,32 @@ import productModel from '../models/productModel';
 import flash from "connect-flash";
 import fs from 'fs';
 import csv from 'csv-parser';
-import multer from 'multer';
 
 let variable:any = [];
 var filename = "";
 
-class CarController {    
-
-    public showError(req: Request, res: Response) {
-        res.render("partials/error");
-        return;
-    }   
-
+class CarController {
+    
     //CRUD
-    public async list(req: Request, res: Response) { 
+    public async list(req: Request, res: Response) { //SIN USO POR EL MOMENTO
         if (!req.session.auth) {            
             req.flash('error_session', 'Debes iniciar sesion para ver esta seccion');
             res.redirect("../user/signin");
             return;        
         }
         else
-        {        
-            console.log(req.body);
+        {
             const productos = await productModel.listar();
-            console.log(productos);
             return res.json(productos);            
         }
     }
 
-    public async find(req: Request, res: Response) {
-        console.log(req.params.id);
+    public async find(req: Request, res: Response) { //SIN USO POR EL MOMENTO
         const { id } = req.params;
         const producto = await productModel.buscarId(id);
-        if (producto)
-            return res.json(producto);
-            res.status(404).json({ text: "Product doesn't exists" });
+        if (!producto)
+            req.flash('error', 'El producto no existe!');        
+        return res.json(producto);
     }
 
     public async addProduct(req: Request, res: Response) {
@@ -48,12 +39,12 @@ class CarController {
         if (!busqueda) {
             const result = await productModel.crear(codigoProducto);
             // alta de controls.hbs
-            req.flash('producto_crud', 'Producto creado.'); 
+            req.flash('confirmacion', 'Producto creado correctamente.'); 
             res.redirect('../control');
             return;                       
         }
         else {
-            req.flash('producto_crud', 'El producto ya existe.'); 
+            req.flash('error', 'El producto ya existe.'); 
             res.redirect("../control"); 
             return;           
         }
@@ -63,31 +54,29 @@ class CarController {
         const { id } = req.params;
         const producto = await productModel.buscarId(id);        
         const result = await productModel.actualizar(req.body, id);            
-        if(result) {			
-            req.flash('producto_crud', 'Producto Id:'+req.params.id+', modificado.'); 
+        if(result) {
+            req.flash('confirmacion','Producto Id:'+req.params.id+', modificado.');            
             res.redirect('../control');    
             return;			            
         }
         else
         {
-            req.flash('producto_crud', 'no se pudo modificar el Producto Id:'+req.params.id+'.'); 
+            req.flash('error', 'No se pudo modificar el Producto Id: '+req.params.id+'.'); 
             res.redirect('../control');    
             return;		
         }
     }
 
     public async delete(req: Request, res: Response) {
-        console.log(req.body);       
-        const { id } = req.params; // hacemos detrucsturing y obtenemos el ID. Es decir, obtenemos una parte de un objeto JS.
+        const { id } = req.params;
         const result = await productModel.eliminar(id);
-        req.flash('producto_crud', 'Producto Id:'+req.params.id+', elminado.'); 
+        req.flash('confirmacion','Producto Id:'+req.params.id+', elminado.');        
         res.redirect('../control');
         return;       
     }
     //FIN CRUD
 
     public async control(req: Request, res: Response) {
-        // si no fue autenticado envialo a la ruta principal
         if (!req.session.auth) {            
             req.flash('error', 'Debes iniciar sesion para ver esta seccion');
             res.redirect("../user/signin");
@@ -101,11 +90,11 @@ class CarController {
     }
 
     public async procesar(req:Request,res:Response){
-		const { id } = req.params; // hacemos detrucsturing y obtenemos el ID. Es decir, obtenemos una parte de un objeto JS.
-        const auto = await productModel.buscarId(id);
-        if(auto !== undefined){            
-			res.render("partials/updateProducts",{auto});
-            console.log(auto);
+		const { id } = req.params;
+        const producto = await productModel.buscarId(id);
+
+        if(producto !== undefined){            
+			res.render("partials/updateProducts",{producto});
         }
 	}   
 
@@ -117,22 +106,18 @@ class CarController {
 
     public uploadfile(req:Request,res:Response,){
         let error;
+        filename = "";
+
         if(req.files){
+            console.log(req.files);
             var file = req.files.file;
             filename = file.name;
-             
-            file.mv('./uploads/' + filename, function (err:Error) {                
-                error = err;
-            });
         }
-        if(req.files !== null){
-        if(error)
-            req.flash('error', 'No se cargó el archivo!');
-        else {
+
+        if(req.files !== null){        
             req.flash('confirmacion','Archivo cargado correctamente!');
             res.redirect("./csv");
             return;
-        }
         } else
             req.flash('error', 'Debe seleccionar un archivo!');
 
@@ -143,12 +128,11 @@ class CarController {
     public leerCsv(req:Request,res:Response){
         variable = [];
         
-        fs.createReadStream(filename) // Abrir archivo
-        .pipe(csv({ separator: ';' })) // Pasarlo al parseador a través de una tubería
+        fs.createReadStream(filename)
+        .pipe(csv({ separator: ';' }))
         .on('data', (row) => variable.push(row) )
-        .on("end", () => {// Y al finalizar, terminar lo necesario
-        });
-        console.log(variable)
+        .on("end", () => {});
+        
         res.render("partials/producto/uploadfile", { archivo: variable });
         return;
 	}
@@ -171,7 +155,6 @@ class CarController {
 
             const cod_proveedor = await productModel.buscarProveedor(razonsocial);
             
-            console.log(cod_proveedor);
             if(cod_proveedor !== undefined){
                 await productModel.actualizarProductos(variable[i], codigo);
                 await productModel.actualizarPrecios(precio, codigo, cod_proveedor.Id);
@@ -187,9 +170,7 @@ class CarController {
         return;
 	}    
 
-    // Paso 8
     public endSession(req: Request, res: Response) {
-        console.log(req.body);
         req.session.user = {};
         req.session.auth = false;
         req.session.destroy(() => console.log("Session finalizada"));

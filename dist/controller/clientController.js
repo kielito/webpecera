@@ -14,14 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const clientModel_1 = __importDefault(require("../models/clientModel"));
 class ClientController {
-    //CRUD
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log(req.body);
             const clientes = yield clientModel_1.default.listar();
             console.log(clientes);
             return res.json(clientes);
-            //res.send('Listado de clientes!!!');
         });
     }
     find(req, res) {
@@ -34,13 +32,24 @@ class ClientController {
             res.status(404).json({ text: "Client doesn't exists" });
         });
     }
+    control(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const clientes = yield clientModel_1.default.listar();
+            const clients = clientes;
+            res.render('partials/cliente/clients', { clients: clientes });
+        });
+    }
+    controlUpdate(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            res.render('partials/cliente/clients');
+        });
+    }
+    //CRUD
     addClient(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const cliente = req.body;
             delete cliente.repassword;
-            console.log(req.body);
-            //res.send('Usuario agregado!!!');
-            const busqueda = yield clientModel_1.default.buscarCliente(cliente.NumeroDocumento); // Hace referencia al campo Usuario de la tabla usuario.
+            const busqueda = yield clientModel_1.default.buscarCliente(cliente.NumeroDocumento);
             if (!busqueda) {
                 const result = yield clientModel_1.default.crear(cliente);
                 return res.json({ message: 'Client saved!!' });
@@ -50,35 +59,16 @@ class ClientController {
     }
     update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body);
             const { id } = req.params;
             const result = yield clientModel_1.default.actualizar(req.body, id);
-            //res.send('Usuario '+ req.params.id +' actualizado!!!');
             return res.json({ text: 'updating a client ' + id });
         });
     }
     delete(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body);
-            //res.send('Usuario '+ req.params.id +' Eliminado!!!');
-            const { id } = req.params; // hacemos detrucsturing y obtenemos el ID. Es decir, obtenemos una parte de un objeto JS.
+            const { id } = req.params;
             const result = yield clientModel_1.default.eliminar(id);
             return res.json({ text: 'deleting a client ' + id });
-        });
-    }
-    //FIN CRUD
-    control(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            //res.send('Controles');
-            const clientes = yield clientModel_1.default.listar();
-            const clients = clientes;
-            res.render('partials/cliente/clients', { clients: clientes });
-        });
-    }
-    controlUpdate(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            //res.send('Controles');        
-            res.render('partials/cliente/clients');
         });
     }
 }

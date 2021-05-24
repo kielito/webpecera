@@ -1,39 +1,46 @@
-<div class="contenedor">  
-<div style="width:83%;margin-left:300px;">    
-    <br>
-    {{#if archivo}}
-        <button type="submit" style="clear:both;float:right;" class="btn btn-secondary" onclick="window.location.href='/product/updatecsv'">Actualizar Datos</button>
-    {{else}}
-        <button type="submit" style="clear:both;float:right;" class="btn btn-secondary" disabled>Actualizar Datos</button>        
-    {{/if}}    
-    <form action="/product/fileupload" method="POST" style="float:left;" enctype="multipart/form-data">
-        <input type="file" name="file" id="">
-        <input type="submit" value="Cargar">        
-    </form>
-<br>
-<table class="table table-striped">   
-    <br> 
-    <br> 
-    <theader>       
-        <th style="width: 15%;">Codigo Producto</th>
-        <th style="width: 20%;">Descripcion</th>
-        <th style="width: 10%;">Stock Minimo</th>
-        <th style="width: 10%;">Precio</th>
-        <th style="width: 15%;">Proveedor</th>
-    </theader>
-    {{#each archivo}}
-    <tr>        
-        <td>{{CodigoProducto}}</td>
-        <td>{{Descripcion}}</td>
-        <td>{{StockMinimo}}</td>
-        <td>${{Precio}}</td>
-        <td>{{RazonSocial}}</td>        
-    </tr>
-    {{else}}
-    <tr>
-        <td colspan="5">No hay mas filas</td>
-    </tr>
-    {{/each}}
-</table>
-</div>
-</div>
+<body>
+    <div class="contenedor">  
+        <div style="width:83%;margin-left:300px;">
+            <br>    
+            <form action="/product/fileupload" method="POST" style="float:left;" enctype="multipart/form-data">
+                <input type="file" name="file" id="">
+                <input type="submit" value="Cargar">        
+            </form>
+            <br>
+            <table class="table table-striped">   
+                <br> 
+                <br> 
+                <theader>       
+                    <th style="width: 15%;">Codigo Producto</th>
+                    <th style="width: 20%;">Descripcion</th>
+                    <th style="width: 10%;">Stock Minimo</th>
+                    <th style="width: 10%;">Precio</th>
+                    <th style="width: 15%;">Proveedor</th>
+                </theader>
+                {{#each archivo}}
+                <tr>        
+                    <td>{{CodigoProducto}}</td>
+                    <td>{{Descripcion}}</td>
+                    <td>{{StockMinimo}}</td>
+                    <td>${{Precio}}</td>
+                    <td>{{RazonSocial}}</td>        
+                </tr>
+                {{else}}
+                <tr>
+                    <td colspan="5">No hay mas filas</td>
+                </tr>
+                {{/each}}
+            </table>
+            <div style="width:80%;;margin-left:160px;">
+                <div align="center">
+                    {{#if archivo}}
+                        <button class="btn btn-secondary" onclick="window.location.href='/product/updatecsv'" align="center">Actualizar Datos</button>
+                    {{else}}
+                        <button class="btn btn-secondary" onclick="window.location.href='/product/updatecsv'" align="center" disabled>Actualizar Datos</button>            
+                    {{/if}}
+                    <button class="btn btn-success" onclick="window.location.href='/product/control';" align="center">Volver</button>
+                </div>    
+            </div>
+        </div>
+    </div>
+</body>

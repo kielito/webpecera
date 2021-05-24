@@ -1,6 +1,7 @@
 body {
     font-family: 'Oswald', sans-serif;
     overflow: hidden;
+    width: 100%;
 }
 
 .index {
@@ -38,10 +39,8 @@ table td {
 }
 
 .contenedor {
-  width: 100vw;
-  
-  height: 880px;
-  
+  width: 100vw;  
+  height: 860px;
   overflow: scroll;
 }
 
