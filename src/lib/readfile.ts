@@ -11,7 +11,7 @@ import productModel from '../models/productModel';
        cb(null, file.fieldname + "-" + Date.now() + "-" + file.originalname)
        fs.createReadStream
     }
-  });*/
+  });
 
 export function leerCSVSchema(req: Request, res:Response, next:NextFunction) {
     var results=[]; 
@@ -27,5 +27,5 @@ export function leerCSVSchema(req: Request, res:Response, next:NextFunction) {
     });
 
     next();
-}   
+}   */
 

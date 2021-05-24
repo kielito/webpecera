@@ -16,6 +16,7 @@ const supplierRoutes_1 = __importDefault(require("./routes/supplierRoutes"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_session_1 = __importDefault(require("express-session"));
 const connect_flash_1 = __importDefault(require("connect-flash"));
+const express_fileupload_1 = __importDefault(require("express-fileupload"));
 dotenv_1.default.config(); //Para leer las varialbes de entorno (JWT)
 class Server {
     constructor() {
@@ -42,6 +43,7 @@ class Server {
         this.app.use(express_1.default.urlencoded({ extended: true })); //Paso 21 - habilitamos para recibir datos a traves de formularios html.
         //this.app.use(express.static('public'));
         this.app.use(connect_flash_1.default());
+        this.app.use(express_fileupload_1.default());
         //configuracion del middeware de sesion
         this.app.use(express_session_1.default({
             secret: 'secret_supersecret',

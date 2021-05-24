@@ -11,6 +11,7 @@ import supplierRoutes from './routes/supplierRoutes';
 import dotenv from 'dotenv';
 import session from "express-session";
 import flash from "connect-flash";
+import upload from 'express-fileupload';
 
 dotenv.config(); //Para leer las varialbes de entorno (JWT)
 
@@ -52,6 +53,7 @@ class Server{
         this.app.use(express.urlencoded({extended:true}));//Paso 21 - habilitamos para recibir datos a traves de formularios html.
 		//this.app.use(express.static('public'));
 		this.app.use(flash());
+		this.app.use(upload());
 
 		//configuracion del middeware de sesion
 		this.app.use(session({

@@ -3,8 +3,10 @@ import productModel from '../models/productModel';
 import flash from "connect-flash";
 import fs from 'fs';
 import csv from 'csv-parser';
+import multer from 'multer';
 
 let variable:any = [];
+var filename = "";
 
 class CarController {    
 
@@ -86,11 +88,11 @@ class CarController {
 
     public async control(req: Request, res: Response) {
         // si no fue autenticado envialo a la ruta principal
-        /*if (!req.session.auth) {            
-            req.flash('error_session', 'Debes iniciar sesion para ver esta seccion');
+        if (!req.session.auth) {            
+            req.flash('error', 'Debes iniciar sesion para ver esta seccion');
             res.redirect("../user/signin");
             return;
-        }*/
+        }
         const productos = await productModel.listar();        
         const proveedores = await productModel.listarProveedor();
         
@@ -108,14 +110,46 @@ class CarController {
 	}   
 
     //Carga CSV
+    public async upload(req:Request,res:Response){
+        res.render("partials/producto/uploadfile");
+        return;
+	}
+
+    public uploadfile(req:Request,res:Response,){
+        let error;
+        if(req.files){
+            var file = req.files.file;
+            filename = file.name;
+             
+            file.mv('./uploads/' + filename, function (err:Error) {                
+                error = err;
+            });
+        }
+        if(req.files !== null){
+        if(error)
+            req.flash('error', 'No se cargó el archivo!');
+        else {
+            req.flash('confirmacion','Archivo cargado correctamente!');
+            res.redirect("./csv");
+            return;
+        }
+        } else
+            req.flash('error', 'Debe seleccionar un archivo!');
+
+        res.redirect("./upload");
+        return;
+	}
+
     public leerCsv(req:Request,res:Response){
-        fs.createReadStream("ejemplo.csv") // Abrir archivo
+        variable = [];
+        
+        fs.createReadStream(filename) // Abrir archivo
         .pipe(csv({ separator: ';' })) // Pasarlo al parseador a través de una tubería
         .on('data', (row) => variable.push(row) )
         .on("end", () => {// Y al finalizar, terminar lo necesario
         });
-
-        res.redirect('./updatecsv');
+        console.log(variable)
+        res.render("partials/producto/uploadfile", { archivo: variable });
         return;
 	}
 
@@ -151,7 +185,7 @@ class CarController {
 
         res.redirect('./control');
         return;
-	}
+	}    
 
     // Paso 8
     public endSession(req: Request, res: Response) {

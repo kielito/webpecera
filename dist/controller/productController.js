@@ -16,6 +16,7 @@ const productModel_1 = __importDefault(require("../models/productModel"));
 const fs_1 = __importDefault(require("fs"));
 const csv_parser_1 = __importDefault(require("csv-parser"));
 let variable = [];
+var filename = "";
 class CarController {
     showError(req, res) {
         res.render("partials/error");
@@ -98,11 +99,11 @@ class CarController {
     control(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             // si no fue autenticado envialo a la ruta principal
-            /*if (!req.session.auth) {
-                req.flash('error_session', 'Debes iniciar sesion para ver esta seccion');
+            if (!req.session.auth) {
+                req.flash('error', 'Debes iniciar sesion para ver esta seccion');
                 res.redirect("../user/signin");
                 return;
-            }*/
+            }
             const productos = yield productModel_1.default.listar();
             const proveedores = yield productModel_1.default.listarProveedor();
             res.render('partials/producto/productos', { products: productos, proveedor: proveedores, mi_session: true });
@@ -120,13 +121,44 @@ class CarController {
         });
     }
     //Carga CSV
+    upload(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            res.render("partials/producto/uploadfile");
+            return;
+        });
+    }
+    uploadfile(req, res) {
+        let error;
+        if (req.files) {
+            var file = req.files.file;
+            filename = file.name;
+            file.mv('./uploads/' + filename, function (err) {
+                error = err;
+            });
+        }
+        if (req.files !== null) {
+            if (error)
+                req.flash('error', 'No se cargó el archivo!');
+            else {
+                req.flash('confirmacion', 'Archivo cargado correctamente!');
+                res.redirect("./csv");
+                return;
+            }
+        }
+        else
+            req.flash('error', 'Debe seleccionar un archivo!');
+        res.redirect("./upload");
+        return;
+    }
     leerCsv(req, res) {
-        fs_1.default.createReadStream("ejemplo.csv") // Abrir archivo
+        variable = [];
+        fs_1.default.createReadStream(filename) // Abrir archivo
             .pipe(csv_parser_1.default({ separator: ';' })) // Pasarlo al parseador a través de una tubería
             .on('data', (row) => variable.push(row))
             .on("end", () => {
         });
-        res.redirect('./updatecsv');
+        console.log(variable);
+        res.render("partials/producto/uploadfile", { archivo: variable });
         return;
     }
     updateCsv(req, res) {
