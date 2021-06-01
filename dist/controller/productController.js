@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const productModel_1 = __importDefault(require("../models/productModel"));
+const fs_1 = __importDefault(require("fs"));
+const csv_parser_1 = __importDefault(require("csv-parser"));
 // import csv from 'csv-parser'; Estaba este pero me tiraba error aun instalando el npm install csv-parser 
 let variable = [];
 var filename = "";
@@ -45,14 +47,13 @@ class ProductController {
         return __awaiter(this, void 0, void 0, function* () {
             const CodigoProducto = req.body;
             // los saco del form provisorio
-            delete CodigoProducto.StockActual;
-            delete CodigoProducto.PrecioVenta;
-            delete CodigoProducto.IdProveedor;
             console.log(req.body);
             // VALIDAR CAMPOS CodigoProducto para alta desde control.hbs
             const busqueda = yield productModel_1.default.buscarCodigoProducto(CodigoProducto.CodigoProducto);
             if (!busqueda) {
-                const result = yield productModel_1.default.crear(CodigoProducto);
+                //const result = await productModel.crear(CodigoProducto);
+                const result = yield productModel_1.default.crear(CodigoProducto.CodigoProducto, CodigoProducto.Descripcion, CodigoProducto.StockMinimo);
+                const result2 = yield productModel_1.default.crearProductoProveedor(result, CodigoProducto.IdProveedor, CodigoProducto.StockActual, CodigoProducto.PrecioVenta);
                 req.flash('confirmacion', 'Producto creado correctamente.');
                 res.redirect('../product/control');
                 return;
@@ -120,41 +121,33 @@ class ProductController {
             return;
         });
     }
-    /*
-        // linea 115 file.name
-        public uploadfile(req:Request,res:Response,){
-            let error;
-            filename = "";
-
-            if(req.files){
-                console.log(req.files);
-                var file = req.files.file;
-                filename = file.name;
-            }
-
-            if(req.files !== null){
-                req.flash('confirmacion','Archivo cargado correctamente!');
-                res.redirect("./csv");
-                return;
-            } else
-                req.flash('error', 'Debe seleccionar un archivo!');
-
-            res.redirect("./upload");
+    uploadfile(req, res) {
+        let error;
+        filename = "";
+        if (req.files) {
+            console.log(req.files);
+            var file = req.files.file;
+            filename = file.name;
+        }
+        if (req.files !== null) {
+            req.flash('confirmacion', 'Archivo cargado correctamente!');
+            res.redirect("./csv");
             return;
         }
-        // linea 133 separatot: ';'
-        public leerCsv(req:Request,res:Response){
-            variable = [];
-            
-            fs.createReadStream(filename)
-            .pipe(csv({ separator: ';' }))
-            .on('data', (row) => variable.push(row) )
-            .on("end", () => {});
-            
-            res.render("partials/producto/uploadfile", { archivo: variable });
-            return;
-        }
-    */
+        else
+            req.flash('error', 'Debe seleccionar un archivo!');
+        res.redirect("./upload");
+        return;
+    }
+    leerCsv(req, res) {
+        variable = [];
+        fs_1.default.createReadStream(filename)
+            .pipe(csv_parser_1.default({ separator: ';' }))
+            .on('data', (row) => variable.push(row))
+            .on("end", () => { });
+        res.render("partials/producto/uploadfile", { archivo: variable });
+        return;
+    }
     updateCsv(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let codigo = "";

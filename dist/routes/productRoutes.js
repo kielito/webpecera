@@ -24,15 +24,15 @@ class ProductRoutes {
         this.router.post('/update/:id', productController_1.default.update);
         this.router.delete('/delete/:id', productController_1.default.delete);
         this.router.get('/delete/:id', productController_1.default.delete);
-        // this.router.get('/csv', productController.leerCsv); 
+        this.router.get('/csv', productController_1.default.leerCsv);
         //Carga Archivo Excel
         this.router.get('/upload', productController_1.default.upload);
-        // this.router.post('/fileupload',productController.uploadfile);
+        this.router.post('/fileupload', productController_1.default.uploadfile);
         this.router.get('/updatecsv', productController_1.default.updateCsv);
         //Fin CRUD
         //CONTROL        
         this.router.get('/control', productController_1.default.control); // renderiza a partials/controls    
-        //this.router.post('/procesar',/*TokenValidation,*/ userController.procesar);
+        //this.router.post('/procesar',/*TokenValidation,*/ userController.procesar);       
     }
 }
 const productRoutes = new ProductRoutes();

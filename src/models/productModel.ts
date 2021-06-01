@@ -8,18 +8,17 @@ class ProductModel {
 	}
 
 	async config() {//Parametro de conexion con la BD.
-		this.db = await createPool({
-			/*
+		this.db = await createPool({			
 			host: 'localhost',
 			user: 'root',
 			password: '',
 			database: 'heroku_4505cc56058eb11',
-			*/
+			/*
 			host: 'us-cdbr-east-03.cleardb.com',
 			user: 'b0e0fd43ed8818',
 			password:'2b1f9d39',
 			database: 'heroku_4505cc56058eb11',	
-			
+			*/
 			connectionLimit: 10 //es una idea de conexiones, el limete dependera de la carga que tenga el servidor
 		});
 	}
@@ -76,21 +75,20 @@ class ProductModel {
 		return null;
 	}
 
-	//Devuelve 1 si logro crear un nuevo producto de la tabla producto
-	async crear(producto: object) {
-		//try{ AGREGAR!!
-		const result = (await this.db.query('INSERT INTO producto SET ?', [producto]))[0].insertId;
-		console.log(result);		
-		return;
+	//Devuelve 1 si logro crear un nuevo producto de la tabla producto.
+	//async crear(producto: object) {
+	async crear(CodigoProducto: string, Descripcion: string, StockMinimo: string) {
+		//try{ AGREGAR!!		
+		const result = (await this.db.query('INSERT INTO producto (CodigoProducto, Descripcion, StockMinimo) VALUES (?, ?, ?)', [CodigoProducto, Descripcion, StockMinimo]))[0].insertId;
+		console.log(result);// ultimo id insertado
+		return result;
 		//} catch{} AGREGAR!!
 	}
 
-	async crearProductoProveedor(producto: object) {		
-		const result = (await this.db.query('INSERT INTO producto_proveedor SET ?', [producto]))[0].affectArrow;		
+	async crearProductoProveedor(IdProducto: string, IdProveedor: string, StockActual: string, PrecioVenta: string) {		
+		const result = (await this.db.query('INSERT INTO producto_proveedor (IdProducto, IdProveedor, StockActual, PrecioVenta) VALUES (?, ?, ?, ?)', [IdProducto, IdProveedor, StockActual, PrecioVenta]))[0].affectArrow;		
 		return result;		
 	}
-
-
 
 	//Devuelve 1 si logro actualizar el producto indicado por id
 	async actualizar(producto: object, id: string) {
