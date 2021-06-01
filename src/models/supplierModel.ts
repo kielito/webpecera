@@ -8,10 +8,16 @@ class SupplierModel {
 
 	async config() {//Parametro de conexion con la BD.
 		this.db = await createPool({
+			/*
+			host: 'localhost',
+			user: 'root',
+			password: '',
+			database: 'heroku_4505cc56058eb11',
+			*/
 			host: 'us-cdbr-east-03.cleardb.com',
 			user: 'b0e0fd43ed8818',
 			password: '2b1f9d39',
-			database: 'heroku_4505cc56058eb11',
+			database: 'heroku_4505cc56058eb11',			
 			connectionLimit: 10
 		});
 	}
@@ -33,6 +39,7 @@ class SupplierModel {
 			return encontrado[0][0];
 		return null;
 	}
+	
 	//Devuelve un objeto cuya fila en la tabla proveedores coincide con nombre.
 	//Si no la encuentra devuelve null
 	async buscarProveedor(razonSocial: string) {
@@ -59,7 +66,7 @@ class SupplierModel {
 
 	//Devuelve 1 si logro eliminar el proveedor indicado por id
 	async eliminar(id: string) {
-		const supplier = (await this.db.query('DELETE FROM proveedores WHERE Id = ?', [id]))[0].affectedRows;
+		const supplier = (await this.db.query('DELETE FROM proveedor WHERE Id = ?', [id]))[0].affectedRows;
 		console.log(supplier);
 		return supplier;
 	}

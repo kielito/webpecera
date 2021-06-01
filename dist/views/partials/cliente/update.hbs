@@ -1,42 +1,109 @@
 <body style="background-color: #d1ffe2;">
-    <div class="container p-4">
-        <div class="row">
-            <div class="col-md-4 mx-auto">
-                <div class="card text-center bg-dark">
-                    <div class="card-header bg-success">
-                        <h3>Usuario: {{usuario.Usuario}}</h3>
-                    </div>
-                    <div class="card-body bg-dark">
-                        <form action="../update/{{usuario.Id}}" method="post">
-                            <div class="form-group">                                 
-                                <input class="form-control" type="text" name="usuario"  value="{{usuario.Usuario}}" hidden>                                
-                                <input class="form-control" type="text" name="nombre" placeholder="Nuevo Nombre" value="{{usuario.Nombre}}" autofocus required>
+    <div class="contenedor">
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-md-4 mx-auto">
+                    <div class="card text-center bg-dark">
+                        <div class="card-header bg-success">
+                            <h3>Cliente: {{cliente.Nombre}}</h3>
+                        </div>
+                        <div class="card-body bg-dark">
+                            <form action="../update/{{cliente.Id}}" method="post">
+                                <div class="form-group">
+                                    <label for="exampleInputName1">Tipo de documento</label>
+                                    <select class="form-control" name="TipoDocumento" required>
+                                        <option value="{{cliente.TipoDocumento}}" selected>{{cliente.TipoDocumento}}
+                                        </option>
+                                        <option value="DNI">DNI</option>
+                                        <option value="CUIL">CUIL</option>
+                                        <option value="CUIT">CUIT</option>
+                                        <option value="Otro">OTRO</option>
+
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nùmero de Documento</label>
+                                    <input type="number" class="form-control" name="NumeroDocumento" id="exampleInputName2"
+                                        value="{{cliente.NumeroDocumento}}" required>
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" class="form-control" name="Nombre" id="exampleInputName2"
+                                        value="{{cliente.Nombre}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Apelido</label>
+                                    <input type="text" class="form-control" name="Apellido" id="exampleInputName2"
+                                        value="{{cliente.Apellido}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="text" class="form-control" name="Email" id="exampleInputName2"
+                                        value="{{cliente.Email}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dirección</label>
+                                    <input type="text" class="form-control" name="Direccion" id="exampleInputName2"
+                                        value="{{cliente.Direccion}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Localidad</label>
+                                    <input type="text" class="form-control" name="Localidad" id="exampleInputName2"
+                                        value="{{cliente.Localidad}}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleInputName1">Provincia</label>
+                                    <select class="form-control" name="Provincia" required>
+                                        <option value="{{cliente.Provincia}}" selected>{{cliente.Provincia}}
+                                        </option>
+                                        <option value="Buenos Aires">Buenos Aires</option>
+                                        <option value="Buenos Aires Capital">Buenos Aires Capital</option>
+                                        <option value="Catamarca">Catamarca</option>
+                                        <option value="Chaco">Chaco</option>
+                                        <option value="Chubut">Chubut</option>
+                                        <option value="Cordoba">Cordoba</option>
+                                        <option value="Corrientes">Corrientes</option>
+                                        <option value="Entre Rios">Entre Rios</option>
+                                        <option value="Formosa">Formosa</option>
+                                        <option value="Jujuy">Jujuy</option>
+                                        <option value="La Pampa">La Pampa</option>
+                                        <option value="La Rioja">La Rioja</option>
+                                        <option value="Mendoza">Mendoza</option>
+                                        <option value="Misiones">Misiones</option>
+                                        <option value="Neuquen">Neuquen</option>
+                                        <option value="Rio Negro">Rio Negro</option>
+                                        <option value="Salta">Salta</option>
+                                        <option value="San Juan">San Juan</option>
+                                        <option value="San Luis">San Luis</option>
+                                        <option value="Santa Cruz">Santa Cruz</option>
+                                        <option value="Santa Fe">Santa Fe</option>
+                                        <option value="Santiago del Estero">Santiago del Estero</option>
+                                        <option value="Tierra del Fuego">Tierra del Fuego</option>
+                                        <option value="Tucuman">Tucuman</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Código Postal</label>
+
+                                    <input type="text" class="form-control" name="CodigoPostal" id="exampleInputName2"
+                                    value="{{cliente.CodigoPostal}}" required>
+                                </div>
                                 </br>
-                                <input class="form-control" type="text" name="apellido" placeholder="Nuevo Apellido" value="{{usuario.Apellido}}" required>
-                                <!--name: nombre de la variable, placeholder: etiqueta-->
-                                </br>
-                                <input class="form-control" type="password" name="password" placeholder="Nueva Contraseña" required>
-                                </br>
-                                <input class="form-control" type="text" name="legajo" placeholder="Nuevo Legajo" value="{{usuario.Legajo}}" required>
-                                </br>
-                                <input class="form-control" type="email" name="email" placeholder="Nuevo Email" value="{{usuario.Email}}" required>                                 
-                                </br>
-                                 <select class="form-control" name="perfil" required>
-                                   <option value="">Seleccionar el Nuevo Rol</option>
-                                   <option value="Admin">Admin</option>
-                                   <option value="Usuario">Usuario</option>                                                                                                           
-                                </select>
-                                </br>                                
-                                <button class="btn btn-primary btn-block">Guardar</button>                                              
-                            </div>
+                                <button class="btn btn-primary btn-block">Actualizar</button>
+                        </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div align="center">
-    <BR>
-    <button class="btn btn-info" onclick="window.location.href='/user/users';" align="center">Volver</button>
+        </div>
+        <div align="center">
+            <BR>
+            <button class="btn btn-info" onclick="window.location.href='/user/home';" align="center">Volver</button>
+        </div>
     </div>
 </body>

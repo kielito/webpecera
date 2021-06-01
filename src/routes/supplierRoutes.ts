@@ -8,22 +8,19 @@ class SupplierRoutes{
 	}
 	config():void{
         //se asocian rutas con el metodo de una clase existente:
-
 		this.router.get('/',(req:Request,res:Response)=> {
-            res.send('Suppliers!!!');
-            //res.render("partials/principal");               
-        });
-        
+            res.render("partials/principal");              
+        });        
         //CRUD
         this.router.get('/list',supplierController.list);
         this.router.get('/find/:id',supplierController.find);
-        this.router.post('/add',supplierController.addSupplier);
-        this.router.put('/update/:id',supplierController.update);
+        this.router.post('/add',supplierController.addSupplier);    
+        this.router.get('/update/:id',supplierController.mostrarUpdate);
+		this.router.post('/update/:id',supplierController.update);
         this.router.delete('/delete/:id',supplierController.delete);
+        this.router.get('/delete/:id',supplierController.delete);
         // FIN CRUD
-
-        this.router.get('/control',supplierController.control);
-        
+        this.router.get('/control',supplierController.control);        
 	}
 }
 

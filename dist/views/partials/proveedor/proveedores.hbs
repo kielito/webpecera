@@ -1,43 +1,136 @@
 <body style="background-color: #d1ffe2;">
-    <BR>
-    <table border="1" align="center">
-        <theader>
-            <th>Id</th>
-            <th>TipoDocumento</th>
-            <th>NumeroDocumento</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Email</th>
-            <th>Direccion</th>
-            <th>Localidad</th>
-            <th>Provincia</th>
-            <th>CodigoPostal</th>
-            <th>Accion</th>
-        </theader>
-        {{#each clients}}
-        <tr>
-            <td>{{Id}}</td>
-            <td>{{TipoDocumento}}</td>
-            <td>{{NumeroDocumento}}</td>
-            <td>{{Nombre}}</td>
-            <td>{{Apellido}}</td>
-            <td>{{Email}}</td>
-            <td>{{Direccion}}</td>
-            <td>{{Localidad}}</td>
-            <td>{{Provincia}}</td>
-            <td>{{CodigoPostal}}</td>       
-            <td><a class="btn btn-success" href="/client/update/{{id}}">Modificar</a><a class="btn btn-danger" href="/client/delete/{{id}}">Eliminar</a></td>
-        </tr>
-        {{else}}
-        <tr>
-            <td colspan="10">No hay mas filas</td>
-        </tr>
-        {{/each}}
-    </table>
-
-    <div align="center">
-        <BR>
-        <button class="btn btn-info" onclick="window.location.href='#';" align="center">Agregar</button>
-        <button class="btn btn-success" onclick="window.location.href='http://localhost:3000/user/home';" align="center">Panel de Control</button>
+    <div class="contenedor">
+        <script type="text/javascript">
+            function muestra(id) {
+                if (document.getElementById(id).style.display == "none")
+                    document.getElementById(id).style.display = "";
+            }
+            function oculta(id) {
+                if (document.getElementById(id).style.display == "")
+                    document.getElementById(id).style.display = "none";
+            }
+        </script>
+        <div style="width:83%;margin-left:300px;">
+            <div style="display:inline;">Cargar proveedor</div>         
+            <div onClick="muestra('carga')" style="cursor:pointer;display: inline;">[+]</div>
+            <div onClick="oculta('carga')" style="cursor:pointer;display:inline;">[-]</div>    
+        </div>
+        <div id="carga" style="display: none">
+            <br>
+            <form action="../supplier/add" method="POST" style="width:70%;;margin-left:300px;">
+                <div class="form-group">
+                    <label for="exampleInputName1">Codigo Postal</label>
+                    <input type="text" class="form-control" name="CodigoPostal" id="exampleInputName1" placeholder="1424" required>
+                </div>        
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Descripcion</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" name="Descripcion" rows="5" placeholder="Breve descripcion"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputName2">Direccion</label>
+                    <input type="text" class="form-control" name="Direccion" id="exampleInputName2" placeholder="Av Rivadavia 1424" required>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputName2">Email</label>
+                    <input type="text" class="form-control" name="Email" id="exampleInputName2" placeholder="proveedor@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputName2">Localidad</label>
+                    <input type="text" class="form-control" name="Localidad" id="exampleInputName2" placeholder="Capital Federal" required>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputName2">Tipo de documento</label>
+                    <select class="form-control" name="TipoDocumento" id="exampleInputSelect1" required>
+                                        <option value="">Seleccione</option>
+                                        <option value="DNI">DNI</option>
+                                        <option value="CUIL">CUIL</option>
+                                        <option value="CUIT">CUIT</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>   
+                </div>                  
+                <div class="form-group">
+                    <label for="exampleInputName2">Numero de documento</label>
+                    <input type="text" class="form-control" name="NumeroDocumento" id="exampleInputName2" placeholder="17867068" required>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputName2">Provincia</label>
+                    <select class="form-control" name="Provincia" required>
+                                        <option value="" selected>Seleccione
+                                        </option>
+                                        <option value="Buenos Aires">Buenos Aires</option>
+                                        <option value="Buenos Aires Capital">Buenos Aires Capital</option>
+                                        <option value="Catamarca">Catamarca</option>
+                                        <option value="Chaco">Chaco</option>
+                                        <option value="Chubut">Chubut</option>
+                                        <option value="Cordoba">Cordoba</option>
+                                        <option value="Corrientes">Corrientes</option>
+                                        <option value="Entre Rios">Entre Rios</option>
+                                        <option value="Formosa">Formosa</option>
+                                        <option value="Jujuy">Jujuy</option>
+                                        <option value="La Pampa">La Pampa</option>
+                                        <option value="La Rioja">La Rioja</option>
+                                        <option value="Mendoza">Mendoza</option>
+                                        <option value="Misiones">Misiones</option>
+                                        <option value="Neuquen">Neuquen</option>
+                                        <option value="Rio Negro">Rio Negro</option>
+                                        <option value="Salta">Salta</option>
+                                        <option value="San Juan">San Juan</option>
+                                        <option value="San Luis">San Luis</option>
+                                        <option value="Santa Cruz">Santa Cruz</option>
+                                        <option value="Santa Fe">Santa Fe</option>
+                                        <option value="Santiago del Estero">Santiago del Estero</option>
+                                        <option value="Tierra del Fuego">Tierra del Fuego</option>
+                                        <option value="Tucuman">Tucuman</option>
+                                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputName2">Razon social</label>
+                    <input type="text" class="form-control" name="RazonSocial" id="exampleInputName2" placeholder="Proveedor S.A" required>
+                </div>                                                         
+                
+                <div class="form-group">
+                    <button type="submit" style="clear:both;" class="btn btn-success">Cargar</button>
+                </div> 
+            </form>
+        </div>
+        <br>
+        <table border="1" align="center">
+            <theader>
+                <th>Id</th>
+                <th>Tipo Documento</th>
+                <th>Numero Documento</th>
+                <th>Razon Social</th>
+                <th>Email</th>
+                <th>Direccion</th>
+                <th>Localidad</th>
+                <th>Provincia</th>
+                <th>Codigo Postal</th>
+                <th>Descripcion</th>
+                <th>Accion</th>                
+            </theader>
+            {{#each supplier}}
+            <tr>
+                <td>{{Id}}</td>
+                <td>{{TipoDocumento}}</td>
+                <td>{{NumeroDocumento}}</td>
+                <td>{{RazonSocial}}</td>
+                <td>{{Email}}</td>
+                <td>{{Direccion}}</td>
+                <td>{{Localidad}}</td>
+                <td>{{Provincia}}</td>
+                <td>{{CodigoPostal}}</td>
+                <td>{{Descripcion}}</td>
+                <td><a class="btn btn-success" href="/supplier/update/{{Id}}">Modificar</a><a class="btn btn-danger" href="/supplier/delete/{{Id}}">Eliminar</a></td>
+            </tr>
+            {{else}}
+            <tr>
+                <td colspan="11">No hay mas filas</td>
+            </tr>
+            {{/each}}
+        </table>
+        <div align="center">
+            <BR>
+            <button class="btn btn-success" onclick="window.location.href='/user/home';" align="center">Volver</button>
+        </div>
     </div>
 </body>

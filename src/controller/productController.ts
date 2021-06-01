@@ -2,12 +2,13 @@ import { Request, Response } from 'express';
 import productModel from '../models/productModel';
 import flash from "connect-flash";
 import fs from 'fs';
-import csv from 'csv-parser';
+import csv from 'csv-parse';
+// import csv from 'csv-parser'; Estaba este pero me tiraba error aun instalando el npm install csv-parser 
 
 let variable:any = [];
 var filename = "";
 
-class CarController {
+class ProductController {
     
     //CRUD
     public async list(req: Request, res: Response) { //SIN USO POR EL MOMENTO
@@ -31,21 +32,25 @@ class CarController {
         return res.json(producto);
     }
 
+    // solo agrega en la tabla 
     public async addProduct(req: Request, res: Response) {
-        const codigoProducto = req.body;
+        const CodigoProducto = req.body;
+        // los saco del form provisorio
+        delete CodigoProducto.StockActual;
+        delete CodigoProducto.PrecioVenta;
+        delete CodigoProducto.IdProveedor;        
         console.log(req.body);       
         // VALIDAR CAMPOS CodigoProducto para alta desde control.hbs
-        const busqueda = await productModel.buscarCodigoProducto(codigoProducto.CodigoProducto);
+        const busqueda = await productModel.buscarCodigoProducto(CodigoProducto.CodigoProducto);
         if (!busqueda) {
-            const result = await productModel.crear(codigoProducto);
-            // alta de controls.hbs
+            const result = await productModel.crear(CodigoProducto);            
             req.flash('confirmacion', 'Producto creado correctamente.'); 
-            res.redirect('../control');
+            res.redirect('../product/control');
             return;                       
         }
         else {
             req.flash('error', 'El producto ya existe.'); 
-            res.redirect("../control"); 
+            res.redirect("../product/control"); 
             return;           
         }
     }
@@ -103,39 +108,41 @@ class CarController {
         res.render("partials/producto/uploadfile");
         return;
 	}
+    /*
+        // linea 115 file.name
+        public uploadfile(req:Request,res:Response,){
+            let error;
+            filename = "";
 
-    public uploadfile(req:Request,res:Response,){
-        let error;
-        filename = "";
+            if(req.files){
+                console.log(req.files);
+                var file = req.files.file;
+                filename = file.name;
+            }
 
-        if(req.files){
-            console.log(req.files);
-            var file = req.files.file;
-            filename = file.name;
-        }
+            if(req.files !== null){        
+                req.flash('confirmacion','Archivo cargado correctamente!');
+                res.redirect("./csv");
+                return;
+            } else
+                req.flash('error', 'Debe seleccionar un archivo!');
 
-        if(req.files !== null){        
-            req.flash('confirmacion','Archivo cargado correctamente!');
-            res.redirect("./csv");
+            res.redirect("./upload");
             return;
-        } else
-            req.flash('error', 'Debe seleccionar un archivo!');
-
-        res.redirect("./upload");
-        return;
-	}
-
-    public leerCsv(req:Request,res:Response){
-        variable = [];
-        
-        fs.createReadStream(filename)
-        .pipe(csv({ separator: ';' }))
-        .on('data', (row) => variable.push(row) )
-        .on("end", () => {});
-        
-        res.render("partials/producto/uploadfile", { archivo: variable });
-        return;
-	}
+        }
+        // linea 133 separatot: ';'
+        public leerCsv(req:Request,res:Response){
+            variable = [];
+            
+            fs.createReadStream(filename)
+            .pipe(csv({ separator: ';' }))
+            .on('data', (row) => variable.push(row) )
+            .on("end", () => {});
+            
+            res.render("partials/producto/uploadfile", { archivo: variable });
+            return;
+        }
+    */
 
     public async updateCsv(req:Request,res:Response){
         let codigo = "";
@@ -178,5 +185,5 @@ class CarController {
     }
 }
 
-const carController = new CarController();
-export default carController;
+const productController = new ProductController();
+export default productController;

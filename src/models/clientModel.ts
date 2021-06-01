@@ -8,23 +8,30 @@ class ClientModel {
 
 	async config() {//Parametro de conexion con la BD.
 		this.db = await createPool({
+			/*
+			host: 'localhost',
+			user: 'root',
+			password: '',
+			database: 'heroku_4505cc56058eb11',
+			*/
 			host: 'us-cdbr-east-03.cleardb.com',
 			user: 'b0e0fd43ed8818',
 			password: '2b1f9d39',
 			database: 'heroku_4505cc56058eb11',
+			
 			connectionLimit: 10
 		});
 	}
 
-	async listar() {//Devuelve todas las filas de la tabla usuario
+	async listar() {//Devuelve todas las filas de la tabla cliente
 		//const db=this.connection;
 		const clientes = await this.db.query('SELECT * FROM cliente');
-		//console.log(usuarios[0]);
+		//console.log(clientes[0]);
 		//devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
 		return clientes[0];
 	}
 
-	//Devuelve un objeto cuya fila en la tabla usuarios coincide con id.
+	//Devuelve un objeto cuya fila en la tabla cliente coincide con id.
 	//Si no la encuentra devuelve null
 	async buscarId(id: string) {
 		const encontrado: any = await this.db.query('SELECT * FROM cliente WHERE Id = ?', [id]);
@@ -34,7 +41,7 @@ class ClientModel {
 		return null;
 	}
 	
-	//Devuelve un objeto cuya fila en la tabla usuarios coincide con nombre.
+	//Devuelve un objeto cuya fila en la tabla cliente coincide con nombre.
 	//Si no la encuentra devuelve null
 	async buscarCliente(numeroDocumento: string) {
 		const encontrado: any = await this.db.query('SELECT * FROM cliente WHERE NumeroDocumento = ?', [numeroDocumento]);
@@ -44,21 +51,21 @@ class ClientModel {
 		return null;
 	}
 
-	//Devuelve 1 si logro crear un nuevo usuario de la tabla usuarios
+	//Devuelve 1 si logro crear un nuevo cliente de la tabla cliente
 	async crear(cliente: object) {
 		const result = (await this.db.query('INSERT INTO cliente SET ?', [cliente]))[0].affectedRows;
 		console.log(result);
 		return result;
 	}
 
-	//Devuelve 1 si logro actualizar el usuario indicado por id
+	//Devuelve 1 si logro actualizar el cliente indicado por id
 	async actualizar(cliente: object, id: string) {
 		const result = (await this.db.query('UPDATE cliente SET ? WHERE Id = ?', [cliente, id]))[0].affectedRows;
 		console.log(result);
 		return result;
 	}
 
-	//Devuelve 1 si logro eliminar el usuario indicado por id
+	//Devuelve 1 si logro eliminar el cliente indicado por id
 	async eliminar(id: string) {
 		const user = (await this.db.query('DELETE FROM cliente WHERE Id = ?', [id]))[0].affectedRows;
 		console.log(user);

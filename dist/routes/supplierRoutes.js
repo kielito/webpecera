@@ -13,15 +13,16 @@ class SupplierRoutes {
     config() {
         //se asocian rutas con el metodo de una clase existente:
         this.router.get('/', (req, res) => {
-            res.send('Suppliers!!!');
-            //res.render("partials/principal");               
+            res.render("partials/principal");
         });
         //CRUD
         this.router.get('/list', supplierController_1.default.list);
         this.router.get('/find/:id', supplierController_1.default.find);
         this.router.post('/add', supplierController_1.default.addSupplier);
-        this.router.put('/update/:id', supplierController_1.default.update);
+        this.router.get('/update/:id', supplierController_1.default.mostrarUpdate);
+        this.router.post('/update/:id', supplierController_1.default.update);
         this.router.delete('/delete/:id', supplierController_1.default.delete);
+        this.router.get('/delete/:id', supplierController_1.default.delete);
         // FIN CRUD
         this.router.get('/control', supplierController_1.default.control);
     }

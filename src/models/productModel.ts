@@ -9,10 +9,17 @@ class ProductModel {
 
 	async config() {//Parametro de conexion con la BD.
 		this.db = await createPool({
+			/*
+			host: 'localhost',
+			user: 'root',
+			password: '',
+			database: 'heroku_4505cc56058eb11',
+			*/
 			host: 'us-cdbr-east-03.cleardb.com',
 			user: 'b0e0fd43ed8818',
 			password:'2b1f9d39',
 			database: 'heroku_4505cc56058eb11',	
+			
 			connectionLimit: 10 //es una idea de conexiones, el limete dependera de la carga que tenga el servidor
 		});
 	}
@@ -24,7 +31,7 @@ class ProductModel {
 	}
 
 	async listarProveedor() {//Devuelve todas las filas de la tabla producto		
-		const productos = await this.db.query('SELECT RazonSocial AS Proveedor FROM proveedor');
+		const productos = await this.db.query('SELECT Id As IdProveedor, RazonSocial AS Proveedor FROM proveedor');
 		//devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
 		return productos[0];
 	}
@@ -72,11 +79,18 @@ class ProductModel {
 	//Devuelve 1 si logro crear un nuevo producto de la tabla producto
 	async crear(producto: object) {
 		//try{ AGREGAR!!
-		const result = (await this.db.query('INSERT INTO producto SET ?', [producto]))[0].affectedRows;
-		console.log(result);
-		return result;
+		const result = (await this.db.query('INSERT INTO producto SET ?', [producto]))[0].insertId;
+		console.log(result);		
+		return;
 		//} catch{} AGREGAR!!
 	}
+
+	async crearProductoProveedor(producto: object) {		
+		const result = (await this.db.query('INSERT INTO producto_proveedor SET ?', [producto]))[0].affectArrow;		
+		return result;		
+	}
+
+
 
 	//Devuelve 1 si logro actualizar el producto indicado por id
 	async actualizar(producto: object, id: string) {

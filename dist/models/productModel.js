@@ -17,6 +17,12 @@ class ProductModel {
     config() {
         return __awaiter(this, void 0, void 0, function* () {
             this.db = yield promise_1.createPool({
+                /*
+                host: 'localhost',
+                user: 'root',
+                password: '',
+                database: 'heroku_4505cc56058eb11',
+                */
                 host: 'us-cdbr-east-03.cleardb.com',
                 user: 'b0e0fd43ed8818',
                 password: '2b1f9d39',
@@ -34,7 +40,7 @@ class ProductModel {
     }
     listarProveedor() {
         return __awaiter(this, void 0, void 0, function* () {
-            const productos = yield this.db.query('SELECT RazonSocial AS Proveedor FROM proveedor');
+            const productos = yield this.db.query('SELECT Id As IdProveedor, RazonSocial AS Proveedor FROM proveedor');
             //devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
             return productos[0];
         });
@@ -85,10 +91,16 @@ class ProductModel {
     crear(producto) {
         return __awaiter(this, void 0, void 0, function* () {
             //try{ AGREGAR!!
-            const result = (yield this.db.query('INSERT INTO producto SET ?', [producto]))[0].affectedRows;
+            const result = (yield this.db.query('INSERT INTO producto SET ?', [producto]))[0].insertId;
             console.log(result);
-            return result;
+            return;
             //} catch{} AGREGAR!!
+        });
+    }
+    crearProductoProveedor(producto) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = (yield this.db.query('INSERT INTO producto_proveedor SET ?', [producto]))[0].affectArrow;
+            return result;
         });
     }
     //Devuelve 1 si logro actualizar el producto indicado por id

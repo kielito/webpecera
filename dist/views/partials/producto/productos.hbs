@@ -1,18 +1,4 @@
-<div class="contenedor">  
-    {{#if producto_crud}}
-    <div class="container p-4">
-        <div class="row">
-            <div class="col-md-4 mx-auto">
-                <div class="alert alert-success fade show" role="alert">
-                    {{producto_crud}}
-                    <button type="button" class="close" data-dismiss='alert' aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{/if}}
+<div class="contenedor">
     <script type="text/javascript">
         function muestra(id) {
             if (document.getElementById(id).style.display == "none")
@@ -26,56 +12,59 @@
     <div style="width:83%;margin-left:300px;">
         <div style="display:inline;">Cargar Producto</div>
         <br>
-        <button type="submit" style="clear:both;float:right;" class="btn btn-secondary" onclick="window.location.href='/product/upload'">Actualización Masiva</button>            
-        <br>    
+        <button type="submit" style="clear:both;float:right;" class="btn btn-secondary"
+            onclick="window.location.href='/product/upload'">Actualización Masiva</button>
+        <br>
         <div onClick="muestra('carga')" style="cursor:pointer;display: inline;">[+]</div>
-        <div onClick="oculta('carga')" style="cursor:pointer;display:inline;">[-]</div>    
+        <div onClick="oculta('carga')" style="cursor:pointer;display:inline;">[-]</div>
     </div>
     <div id="carga" style="display: none">
         <br>
-        <form action="" method="POST" style="width:70%;;margin-left:300px;">
+        <form action="../product/add" method="POST" style="width:70%;;margin-left:300px;">
             <div class="form-group">
                 <label for="exampleInputName1">Codigo Producto</label>
-                <input type="text" class="form-control" name="codigoProducto" id="exampleInputName1" placeholder="Art-001" required>
-            </div>        
+                <input type="text" class="form-control" name="CodigoProducto" id="exampleInputName1"
+                    placeholder="Art-001" required>
+            </div>
             <div class="form-group">
                 <label for="exampleFormControlTextarea1">Descripción</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" name="descripcion" rows="5" placeholder="Breve descripcion"></textarea>
+                <textarea class="form-control" id="exampleFormControlTextarea1" name="Descripcion" rows="5"
+                    placeholder="Breve descripcion"></textarea>
             </div>
             <div class="form-group">
                 <label for="exampleInputName2">Stock Minimo</label>
-                <input type="text" class="form-control" name="stockMinimo" id="exampleInputName2" placeholder="1" required>
+                <input type="text" class="form-control" name="StockMinimo" id="exampleInputName2" placeholder="5"
+                    required>
             </div>
             <div class="form-group">
-                <label for="exampleInputName2">Stock Actual</label>
-                <input type="text" class="form-control" name="stockActual" id="exampleInputName2" placeholder="0" required>
+                <label for="exampleInputName3">Stock Actual</label>
+                <input type="text" class="form-control" name="StockActual" id="exampleInputName3" placeholder="50"
+                    required>
             </div>
             <div class="form-group">
-                <label for="exampleInputName2">Precio</label>
-                <input type="text" class="form-control" name="Precio" id="exampleInputName2" placeholder="1" required>
-            </div>        
+                <label for="exampleInputName4">Precio</label>
+                <input type="text" class="form-control" name="PrecioVenta" id="exampleInputName4" placeholder="550" required>
+            </div>
             <div class="form-group">
-                <label for="exampleInputName2">Proveedor</label>       
-                <select class="form-control" name="proveedor" required>
-                    <option value="">Seleccionar el Proveedor</option>
+                <label for="exampleSelectName1">Proveedor</label>
+                <select class="form-control" name="IdProveedor" id="exampleSelectName1" required>
+                    <option value="">Seleccionar</option>
                     {{#each proveedor}}
-                        <option>{{Proveedor}}</option>       
-                    {{/each}}       
+                    <option value="{{IdProveedor}}">{{Proveedor}}</option>
+                    {{/each}}
                 </select>
-            </div> 
-        
+            </div>
             <div class="form-group">
                 <button type="submit" style="clear:both;" class="btn btn-success">Cargar</button>
-            </div> 
+            </div>
         </form>
     </div>
     <br>
     <div style="width:70%;;margin-left:300px;">
         <label>Listado de productos</label>
     </div>
-
     <table class="table table-striped" style="width:83%;;margin-left:300px;">
-        <theader>       
+        <theader>
             <th style="width: 15%;">Codigo Producto</th>
             <th style="width: 20%;">Descripcion</th>
             <th style="width: 10%;">Stock Minimo</th>
@@ -85,15 +74,15 @@
             <th style="width: 20%;">Accion</th>
         </theader>
         {{#each products}}
-        <tr>        
+        <tr>
             <td>{{CodigoProducto}}</td>
             <td>{{Descripcion}}</td>
             <td>{{StockMinimo}}</td>
             <td>{{StockActual}}</td>
             <td>${{PrecioVenta}}</td>
             <td>{{RazonSocial}}</td>
-            <td><a class="btn btn-secondary" href="">Modificar</a> <a class="btn btn-secondary"
-                    href="">Eliminar</a></td>
+            <td><a class="btn btn-secondary" href="">Modificar</a> <a class="btn btn-secondary" href="">Eliminar</a>
+            </td>
         </tr>
         {{else}}
         <tr>

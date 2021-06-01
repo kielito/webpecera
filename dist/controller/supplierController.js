@@ -42,9 +42,11 @@ class SupplierController {
             const busqueda = yield supplierModel_1.default.buscarProveedor(proveedor.RazonSocial); // Hace referencia al campo Usuario de la tabla usuario.
             if (!busqueda) {
                 const result = yield supplierModel_1.default.crear(proveedor);
-                return res.json({ message: 'Supplier saved!!' });
+                req.flash('confirmacion', 'Proveedor registrado correctamente!');
+                return res.redirect("../supplier/control");
             }
-            return res.json({ message: 'Supplier exists!!' });
+            req.flash('error', 'El proveedor ya se encuentra registrado!');
+            return res.redirect("../supplier/control");
         });
     }
     update(req, res) {
@@ -53,7 +55,8 @@ class SupplierController {
             const { id } = req.params;
             const result = yield supplierModel_1.default.actualizar(req.body, id);
             //res.send('Proveedor '+ req.params.id +' actualizado!!!');
-            return res.json({ text: 'updating a client ' + id });
+            req.flash('confirmacion', 'Proveedor actualizado correctamente!');
+            return res.redirect("../control");
         });
     }
     delete(req, res) {
@@ -62,7 +65,8 @@ class SupplierController {
             //res.send('Proveedor '+ req.params.id +' Eliminado!!!');
             const { id } = req.params; // hacemos detrucsturing y obtenemos el ID. Es decir, obtenemos una parte de un objeto JS.
             const result = yield supplierModel_1.default.eliminar(id);
-            return res.json({ text: 'deleting a supplier ' + id });
+            req.flash('confirmacion', 'Proveedor eliminado correctamente!');
+            return res.redirect("../control");
         });
     }
     //FIN CRUD
@@ -70,8 +74,16 @@ class SupplierController {
         return __awaiter(this, void 0, void 0, function* () {
             //res.send('Controles');
             const proveedores = yield supplierModel_1.default.listar();
-            const suppliers = proveedores;
             res.render('partials/proveedor/proveedores', { supplier: proveedores });
+        });
+    }
+    mostrarUpdate(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const proveedor = yield supplierModel_1.default.buscarId(id);
+            if (proveedor !== undefined) {
+                res.render("partials/proveedor/update", { proveedor });
+            }
         });
     }
 }

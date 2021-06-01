@@ -111,8 +111,7 @@ class UserController{
             
             if (!result) 
 				res.status(404).json({ text: "No se pudo crear el usuario" });
-			req.flash('confirmacion','Usuario Registrado correctamente!');
-			
+			req.flash('confirmacion','Usuario Registrado correctamente!');			
             return res.redirect("./users");
         }
 		req.flash('error','El usuario y/o email ya se encuentra registrado!');
@@ -145,16 +144,13 @@ class UserController{
         if(!req.session.auth){
             req.flash('error','Debe iniciar sesion para ver esta seccion');
 			res.redirect("../signin");
-        }
-        
+        }        
         const { id } = req.params;
-        const result = await userModel.eliminar(id);
-        
+        const result = await userModel.eliminar(id);        
 		req.flash('confirmacion','Se eliminó el Usuario correctamente!');			
 		res.redirect('../users');
 	}
 	//FIN CRUD
-
 
 	public async users(req:Request,res:Response){		
         if(!req.session.auth){

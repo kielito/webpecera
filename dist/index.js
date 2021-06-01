@@ -59,7 +59,7 @@ class Server {
             this.app.locals.confirmacion = req.flash('confirmacion');
             this.app.locals.login = req.session.auth; //defino la veriable global para identificar cuando se loguea un usuario			
             //aca defino otra variable para otro mensaje flash
-            this.app.locals.producto_crud = req.flash('producto_crud');
+            //this.app.locals.producto_crud = req.flash('producto_crud');
             next();
         });
     }
@@ -67,7 +67,7 @@ class Server {
         this.app.use(indexRoutes_1.default);
         this.app.use("/user", userRoutes_1.default); //user sera un objeto existene en la app.	
         this.app.use("/product", productRoutes_1.default); //user sera un objeto existene en la app.	
-        this.app.use("/cliente", clientRoutes_1.default); //user sera un objeto existene en la app.
+        this.app.use("/client", clientRoutes_1.default); //user sera un objeto existene en la app.
         this.app.use("/supplier", supplierRoutes_1.default); //user sera un objeto existene en la app.
     }
     start() {
