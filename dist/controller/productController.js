@@ -51,7 +51,7 @@ class ProductController {
             // VALIDAR CAMPOS CodigoProducto para alta desde control.hbs
             const busqueda = yield productModel_1.default.buscarCodigoProducto(CodigoProducto.CodigoProducto);
             if (!busqueda) {
-                //const result = await productModel.crear(CodigoProducto);
+                //const result = await productModel.crear(CodigoProducto);.
                 const result = yield productModel_1.default.crear(CodigoProducto.CodigoProducto, CodigoProducto.Descripcion, CodigoProducto.StockMinimo);
                 const result2 = yield productModel_1.default.crearProductoProveedor(result, CodigoProducto.IdProveedor, CodigoProducto.StockActual, CodigoProducto.PrecioVenta);
                 req.flash('confirmacion', 'Producto creado correctamente.');
