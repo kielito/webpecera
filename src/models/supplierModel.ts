@@ -25,7 +25,7 @@ class SupplierModel {
 
 	async listar() {//Devuelve todas las filas de la tabla proveedores 
 		//const db=this.connection;
-		const proveedores = await this.db.query('SELECT * FROM proveedor');
+		const proveedores = await this.db.query('SELECT proveedor.*, CONCAT(telefono_proveedor.Numero,"-",telefono_proveedor.Tipo) AS Telefono FROM proveedor LEFT JOIN telefono_proveedor ON proveedor.Id = telefono_proveedor.IdProveedor WHERE telefono_proveedor.Principal = "Si"');
 		//console.log(proveedores[0]);
 		//devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
 		return proveedores[0];

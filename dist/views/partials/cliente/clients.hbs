@@ -105,7 +105,6 @@
         <br>
         <table class="table table-striped" style="width:83%;;margin-left:300px;">
             <theader>
-                <th>Id</th>
                 <th>TipoDocumento</th>
                 <th>NumeroDocumento</th>
                 <th>Nombre</th>
@@ -115,11 +114,11 @@
                 <th>Localidad</th>
                 <th>Provincia</th>
                 <th>CodigoPostal</th>
+                <th>Telefono</th>
                 <th>Accion</th>
             </theader>
             {{#each clients}}
             <tr>
-                <td>{{Id}}</td>
                 <td>{{TipoDocumento}}</td>
                 <td>{{NumeroDocumento}}</td>
                 <td>{{Nombre}}</td>
@@ -128,7 +127,8 @@
                 <td>{{Direccion}}</td>
                 <td>{{Localidad}}</td>
                 <td>{{Provincia}}</td>
-                <td>{{CodigoPostal}}</td>       
+                <td>{{CodigoPostal}}</td>   
+                <td>{{Telefono}}</td>
                 <td><a class="btn btn-info" href="/client/update/{{Id}}">Editar</a> <a class="btn btn-danger" href="/client/delete/{{Id}}">Eliminar</a></td>
             </tr>
             {{else}}

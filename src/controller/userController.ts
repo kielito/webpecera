@@ -127,11 +127,19 @@ class UserController{
         const { id } = req.params;		
 		const usuario = await userModel.buscarId(id);
 
-		req.body.password = await userModel.encriptarPassword(req.body.password);
+        console.log(req.body);
+
+        if(req.body.Password !== req.body.repassword){
+			req.flash('error','Verifique la clave ingresada!');			
+            return res.render("partials/user/update",{usuario: req.body, home:req.session.user, mi_session:true});
+		}
+		delete req.body.repassword;
+
+		req.body.Password = await userModel.encriptarPassword(req.body.Password);
         const result = await userModel.actualizar(req.body, id);
         
 		if(result) {			
-		req.flash('confirmacion','Usuario "' + req.body.usuario + '" actualizado correctamente!');			
+		req.flash('confirmacion','Usuario "' + req.body.Usuario + '" actualizado correctamente!');			
         return res.redirect("../users");
 		}
 		
@@ -169,6 +177,8 @@ class UserController{
 
 		const { id } = req.params;
         const usuario = await userModel.buscarId(id);
+
+        console.log(usuario);
 
         if(usuario !== undefined){            
 			res.render("partials/user/update",{usuario, home:req.session.user, mi_session:true});

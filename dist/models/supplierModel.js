@@ -34,7 +34,7 @@ class SupplierModel {
     listar() {
         return __awaiter(this, void 0, void 0, function* () {
             //const db=this.connection;
-            const proveedores = yield this.db.query('SELECT * FROM proveedor');
+            const proveedores = yield this.db.query('SELECT proveedor.*, CONCAT(telefono_proveedor.Numero,"-",telefono_proveedor.Tipo) AS Telefono FROM proveedor LEFT JOIN telefono_proveedor ON proveedor.Id = telefono_proveedor.IdProveedor WHERE telefono_proveedor.Principal = "Si"');
             //console.log(proveedores[0]);
             //devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
             return proveedores[0];

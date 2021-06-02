@@ -34,7 +34,16 @@ class ClientModel {
     listar() {
         return __awaiter(this, void 0, void 0, function* () {
             //const db=this.connection;
-            const clientes = yield this.db.query('SELECT * FROM cliente');
+            const clientes = yield this.db.query('SELECT cliente .*, CONCAT(telefono_cliente.Numero,"-",telefono_cliente.Tipo) AS Telefono FROM cliente LEFT JOIN telefono_cliente ON cliente.Id = telefono_cliente.IdCliente WHERE telefono_cliente.Principal = "Si"');
+            //console.log(clientes[0]);
+            //devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
+            return clientes[0];
+        });
+    }
+    listarTelefonos() {
+        return __awaiter(this, void 0, void 0, function* () {
+            //const db=this.connection;
+            const clientes = yield this.db.query('SELECT * FROM telefono_cliente');
             //console.log(clientes[0]);
             //devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
             return clientes[0];

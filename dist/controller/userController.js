@@ -126,10 +126,16 @@ class UserController {
             }
             const { id } = req.params;
             const usuario = yield userModel_1.default.buscarId(id);
-            req.body.password = yield userModel_1.default.encriptarPassword(req.body.password);
+            console.log(req.body);
+            if (req.body.Password !== req.body.repassword) {
+                req.flash('error', 'Verifique la clave ingresada!');
+                return res.render("partials/user/update", { usuario: req.body, home: req.session.user, mi_session: true });
+            }
+            delete req.body.repassword;
+            req.body.Password = yield userModel_1.default.encriptarPassword(req.body.Password);
             const result = yield userModel_1.default.actualizar(req.body, id);
             if (result) {
-                req.flash('confirmacion', 'Usuario "' + req.body.usuario + '" actualizado correctamente!');
+                req.flash('confirmacion', 'Usuario "' + req.body.Usuario + '" actualizado correctamente!');
                 return res.redirect("../users");
             }
             req.flash('error', 'El usuario y/o email ya se encuentra registrado!');
@@ -167,6 +173,7 @@ class UserController {
             }
             const { id } = req.params;
             const usuario = yield userModel_1.default.buscarId(id);
+            console.log(usuario);
             if (usuario !== undefined) {
                 res.render("partials/user/update", { usuario, home: req.session.user, mi_session: true });
             }
