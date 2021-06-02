@@ -42,7 +42,7 @@ class ProductController {
             return res.json(producto);
         });
     }
-    // solo agrega en la tabla 
+    // agrega en la tabla  producto y producto_proveedor
     addProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const CodigoProducto = req.body;
@@ -52,16 +52,26 @@ class ProductController {
             const busqueda = yield productModel_1.default.buscarCodigoProducto(CodigoProducto.CodigoProducto);
             if (!busqueda) {
                 //const result = await productModel.crear(CodigoProducto);.
-                const result = yield productModel_1.default.crear(CodigoProducto.CodigoProducto, CodigoProducto.Descripcion, CodigoProducto.StockMinimo);
-                const result2 = yield productModel_1.default.crearProductoProveedor(result, CodigoProducto.IdProveedor, CodigoProducto.StockActual, CodigoProducto.PrecioVenta);
+                const result = yield productModel_1.default.crear(CodigoProducto.CodigoProducto, CodigoProducto.Descripcion);
+                const result2 = yield productModel_1.default.crearProductoProveedor(result, CodigoProducto.IdProveedor, CodigoProducto.StockMinimo, CodigoProducto.StockActual, CodigoProducto.PrecioVenta);
                 req.flash('confirmacion', 'Producto creado correctamente.');
                 res.redirect('../product/control');
                 return;
             }
             else {
-                req.flash('error', 'El producto ya existe.');
-                res.redirect("../product/control");
-                return;
+                // el producto existe verificar proveedor si no existe el proveedor cargo
+                const resultBuscarProdProv = yield productModel_1.default.buscarProductoProveedor(busqueda.Id, CodigoProducto.IdProveedor);
+                if (!resultBuscarProdProv) {
+                    const resultCrearProdProv = yield productModel_1.default.crearProductoProveedor(busqueda.Id, CodigoProducto.IdProveedor, CodigoProducto.StockMinimo, CodigoProducto.StockActual, CodigoProducto.PrecioVenta);
+                    req.flash('confirmacion', 'Se a cargado el producto para un nuevo proveedor.');
+                    res.redirect("../product/control");
+                    return;
+                }
+                else {
+                    req.flash('error', 'Producto existente para el proveedor.');
+                    res.redirect("../product/control");
+                    return;
+                }
             }
         });
     }
@@ -82,16 +92,40 @@ class ProductController {
             }
         });
     }
+    updateProductoProveedor(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const productoProveedor = req.body;
+            delete productoProveedor.CodigoProducto;
+            delete productoProveedor.Descripcion;
+            delete productoProveedor.RazonSocial;
+            const result = yield productModel_1.default.actualizarProductoProveedor(productoProveedor, id);
+            if (result) {
+                req.flash('confirmacion', 'Producto modificado.');
+                res.redirect('../control');
+                return;
+            }
+            else {
+                req.flash('error', 'No se pudo modificar el Producto Id: ' + req.params.id + '.');
+                res.redirect('../control');
+                return;
+            }
+        });
+    }
     delete(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const result = yield productModel_1.default.eliminar(id);
-            req.flash('confirmacion', 'Producto Id:' + req.params.id + ', elminado.');
+            const { CodigoProducto } = req.params;
+            const { IdProveedor } = req.params;
+            console.log(IdProveedor);
+            const result = yield productModel_1.default.eliminarProductoProveedor(id);
+            req.flash('confirmacion', 'Se ha eliminado el producto para el proveedor.');
             res.redirect('../control');
             return;
         });
     }
     //FIN CRUD
+    //MOSTRAR ABM
     control(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!req.session.auth) {
@@ -105,16 +139,22 @@ class ProductController {
             return;
         });
     }
-    procesar(req, res) {
+    mostrarUpdate(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const producto = yield productModel_1.default.buscarId(id);
-            if (producto !== undefined) {
-                res.render("partials/updateProducts", { producto });
+            const { codigoProducto } = req.params;
+            const { razonSocial } = req.params;
+            console.log(codigoProducto);
+            const productoProveedor = yield productModel_1.default.buscarIdProductoProveedor(id);
+            const producto = yield productModel_1.default.buscarCodigoProducto(codigoProducto);
+            const proveedor = yield productModel_1.default.listarProveedor();
+            if (productoProveedor !== undefined) {
+                res.render("partials/producto/update", { productoProveedor, producto, proveedor, razonSocial });
             }
         });
     }
-    //Carga CSV
+    //FIN MOSTRAR ABM
+    //CARGA CSV
     upload(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             res.render("partials/producto/uploadfile");
@@ -127,7 +167,7 @@ class ProductController {
         if (req.files) {
             console.log(req.files);
             var file = req.files.file;
-            filename = file.name;
+            filename = file.name; // falso error
         }
         if (req.files !== null) {
             req.flash('confirmacion', 'Archivo cargado correctamente!');
@@ -175,6 +215,7 @@ class ProductController {
             return;
         });
     }
+    //FIN CARGA CSV
     endSession(req, res) {
         req.session.user = {};
         req.session.auth = false;

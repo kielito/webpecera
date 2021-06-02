@@ -20,8 +20,8 @@ class ProductRoutes {
         this.router.get('/list', productController_1.default.list);
         this.router.get('/find/:id', productController_1.default.find);
         this.router.post('/add', productController_1.default.addProduct);
-        this.router.get('/update/:id', productController_1.default.procesar); //dibujo la vista		
-        this.router.post('/update/:id', productController_1.default.update);
+        this.router.get('/update/:id&:codigoProducto&:razonSocial', productController_1.default.mostrarUpdate); //dibujo la vista		
+        this.router.post('/update/:id', productController_1.default.updateProductoProveedor);
         this.router.delete('/delete/:id', productController_1.default.delete);
         this.router.get('/delete/:id', productController_1.default.delete);
         this.router.get('/csv', productController_1.default.leerCsv);

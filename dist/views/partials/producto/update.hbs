@@ -1,42 +1,52 @@
 <body style="background-color: #d1ffe2;">
-    <div class="container p-4">
-        <div class="row">
-            <div class="col-md-4 mx-auto">
-                <div class="card text-center bg-dark">
-                    <div class="card-header bg-success">
-                        <h3>Usuario: {{usuario.Usuario}}</h3>
-                    </div>
-                    <div class="card-body bg-dark">
-                        <form action="../update/{{usuario.Id}}" method="post">
-                            <div class="form-group">                                 
-                                <input class="form-control" type="text" name="usuario"  value="{{usuario.Usuario}}" hidden>                                
-                                <input class="form-control" type="text" name="nombre" placeholder="Nuevo Nombre" value="{{usuario.Nombre}}" autofocus required>
-                                </br>
-                                <input class="form-control" type="text" name="apellido" placeholder="Nuevo Apellido" value="{{usuario.Apellido}}" required>
-                                <!--name: nombre de la variable, placeholder: etiqueta-->
-                                </br>
-                                <input class="form-control" type="password" name="password" placeholder="Nueva Contraseña" required>
-                                </br>
-                                <input class="form-control" type="text" name="legajo" placeholder="Nuevo Legajo" value="{{usuario.Legajo}}" required>
-                                </br>
-                                <input class="form-control" type="email" name="email" placeholder="Nuevo Email" value="{{usuario.Email}}" required>                                 
-                                </br>
-                                 <select class="form-control" name="perfil" required>
-                                   <option value="">Seleccionar el Nuevo Rol</option>
-                                   <option value="Admin">Admin</option>
-                                   <option value="Usuario">Usuario</option>                                                                                                           
-                                </select>
-                                </br>                                
-                                <button class="btn btn-primary btn-block">Guardar</button>                                              
-                            </div>
-                        </form>
-                    </div>
-                </div>
+    <div class="contenedor">
+        <form action="../update/{{productoProveedor.Id}}" method="POST" style="width:70%;;margin-left:300px;">
+            <div class="form-group">
+                <label for="exampleInputName1">Codigo Producto</label>
+                <input type="text" class="form-control" name="CodigoProducto" id="exampleInputName1"
+                    value="{{producto.CodigoProducto}}" readonly>
             </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">Descripción</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" name="Descripcion" rows="5"
+                    readonly>{{producto.Descripcion}}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputName2">Stock Minimo</label>
+                <input type="text" class="form-control" name="StockMinimo" id="exampleInputName2"
+                    value="{{productoProveedor.StockMinimo}}" required>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputName3">Stock Actual</label>
+                <input type="text" class="form-control" name="StockActual" id="exampleInputName3"
+                    value="{{productoProveedor.StockActual}}" required>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputName4">Precio</label>
+                <input type="text" class="form-control" name="PrecioVenta" id="exampleInputName4"
+                    value="{{productoProveedor.PrecioVenta}}" required>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputName5">Proveedor</label>
+                <!--
+                <select class="form-control" name="IdProveedor" id="exampleSelectName1" required>
+                    <option value="">Seleccionar</option>
+                    {{#each proveedor}}
+                    <option value="{{IdProveedor}}">{{Proveedor}}</option>
+                    {{/each}}
+                </select>
+                -->
+                <input type="text" class="form-control" name="RazonSocial" id="exampleInputName5"
+                    value="{{razonSocial}}" readonly>
+            </div>
+            <div class="form-group">
+                <button type="submit" style="clear:both;" class="btn btn-success">Acutalizar</button>
+            </div>
+        </form>
+        <div align="center">
+            <BR>
+            <button class="btn btn-info" onclick="window.location.href='/product/control';"
+                align="center">Volver</button>
         </div>
-    </div>
-    <div align="center">
-    <BR>
-    <button class="btn btn-info" onclick="window.location.href='/user/users';" align="center">Volver</button>
     </div>
 </body>
