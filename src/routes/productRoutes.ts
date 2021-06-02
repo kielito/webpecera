@@ -16,12 +16,14 @@ class ProductRoutes{
         this.router.get('/list',productController.list);
 		this.router.get('/find/:id',productController.find);
 		this.router.post('/add',productController.addProduct);        
-        this.router.get('/update/:id',productController.procesar); //dibujo la vista		
-        this.router.post('/update/:id',productController.update);
+        
+        this.router.get('/update/:id&:codigoProducto&:razonSocial',productController.mostrarUpdate); //dibujo la vista		
+        this.router.post('/update/:id',productController.updateProductoProveedor);
+        
         this.router.delete('/delete/:id',productController.delete);
         this.router.get('/delete/:id',productController.delete);
-        this.router.get('/csv', productController.leerCsv); 
-        
+        this.router.get('/csv', productController.leerCsv);
+       
         //Carga Archivo Excel
         this.router.get('/upload',productController.upload);
         this.router.post('/fileupload',productController.uploadfile);

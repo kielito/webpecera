@@ -33,7 +33,7 @@ class ProductModel {
     }
     listar() {
         return __awaiter(this, void 0, void 0, function* () {
-            const productos = yield this.db.query('SELECT p.CodigoProducto, p.Descripcion, p.StockMinimo, pp.StockActual, pp.PrecioVenta, pv.RazonSocial FROM producto p INNER JOIN producto_proveedor pp ON p.Id = pp.IdProducto INNER JOIN proveedor pv ON pp.IdProveedor = pv.Id');
+            const productos = yield this.db.query('SELECT p.CodigoProducto, p.Descripcion, pp.Id, pp.StockMinimo, pp.StockActual, pp.PrecioVenta, pv.RazonSocial FROM producto p INNER JOIN producto_proveedor pp ON p.Id = pp.IdProducto INNER JOIN proveedor pv ON pp.IdProveedor = pv.Id');
             //devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
             return productos[0];
         });
@@ -87,20 +87,52 @@ class ProductModel {
             return null;
         });
     }
+    /*
+    async buscarConInner(idProducto: string, IdProveedor: string) {
+        //const encontrado: any = await this.db.query('SELECT * FROM producto_proveedor  WHERE IdProducto = ? AND IdProveedor = ?', [idProducto, IdProveedor]);
+        const encontrado: any = await this.db.query('SELECT p.Id, p.CodigoProducto, pp.IdProducto, pp.IdProveedor FROM producto p INNER JOIN producto_proveedor pp ON p.Id = pp.IdProducto WHERE pp.IdProducto = ? AND pp.IdProveedor = ?', [idProducto, IdProveedor]);
+        //Ojo la consulta devuelve una tabla de una fila. (Array de array) Hay que desempaquetar y obtener la unica fila al enviar
+        if (encontrado.length > 1)
+            return encontrado[0][0];
+        return null;
+    }
+    */
+    //Devuelve un objeto cuya fila en la tabla producto_proveedor coincide con Id.
+    //Si no la encuentra devuelve null
+    buscarIdProductoProveedor(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const encontrado = yield this.db.query('SELECT * FROM producto_proveedor WHERE Id = ?', [id]);
+            //Ojo la consulta devuelve una tabla de una fila. (Array de array) Hay que desempaquetar y obtener la unica fila al enviar		
+            if (encontrado.length > 1)
+                return encontrado[0][0];
+            return null;
+        });
+    }
+    //Devuelve un objeto cuya fila en la tabla producto_proveedor coincide con IdProducto AND IdProveedor.
+    //Si no la encuentra devuelve null
+    buscarProductoProveedor(idProducto, IdProveedor) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const encontrado = yield this.db.query('SELECT * FROM producto_proveedor WHERE IdProducto = ? AND IdProveedor = ?', [idProducto, IdProveedor]);
+            //Ojo la consulta devuelve una tabla de una fila. (Array de array) Hay que desempaquetar y obtener la unica fila al enviar		
+            if (encontrado.length > 1)
+                return encontrado[0][0];
+            return null;
+        });
+    }
     //Devuelve 1 si logro crear un nuevo producto de la tabla producto.
     //async crear(producto: object) {
-    crear(CodigoProducto, Descripcion, StockMinimo) {
+    crear(CodigoProducto, Descripcion) {
         return __awaiter(this, void 0, void 0, function* () {
             //try{ AGREGAR!!		
-            const result = (yield this.db.query('INSERT INTO producto (CodigoProducto, Descripcion, StockMinimo) VALUES (?, ?, ?)', [CodigoProducto, Descripcion, StockMinimo]))[0].insertId;
+            const result = (yield this.db.query('INSERT INTO producto (CodigoProducto, Descripcion) VALUES (?, ?)', [CodigoProducto, Descripcion]))[0].insertId;
             console.log(result); // ultimo id insertado
             return result;
             //} catch{} AGREGAR!!
         });
     }
-    crearProductoProveedor(IdProducto, IdProveedor, StockActual, PrecioVenta) {
+    crearProductoProveedor(IdProducto, IdProveedor, StockMinimo, StockActual, PrecioVenta) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = (yield this.db.query('INSERT INTO producto_proveedor (IdProducto, IdProveedor, StockActual, PrecioVenta) VALUES (?, ?, ?, ?)', [IdProducto, IdProveedor, StockActual, PrecioVenta]))[0].affectArrow;
+            const result = (yield this.db.query('INSERT INTO producto_proveedor (IdProducto, IdProveedor, StockMinimo, StockActual, PrecioVenta) VALUES (?, ?, ?, ?, ?)', [IdProducto, IdProveedor, StockMinimo, StockActual, PrecioVenta]))[0].affectArrow;
             return result;
         });
     }
@@ -118,6 +150,13 @@ class ProductModel {
             return result;
         });
     }
+    actualizarProductoProveedor(productoProveedor, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = (yield this.db.query('UPDATE producto_proveedor SET ? WHERE Id = ?', [productoProveedor, id]))[0].affectedRows;
+            console.log(result);
+            return result;
+        });
+    }
     actualizarPrecios(producto, id, id_proveedor) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = (yield this.db.query('UPDATE producto_proveedor INNER JOIN producto ON producto_proveedor.IdProducto = producto.Id SET PrecioVenta = ? WHERE producto.CodigoProducto = ? AND producto_proveedor.IdProveedor = ?', [producto, id, id_proveedor]))[0];
@@ -129,6 +168,12 @@ class ProductModel {
     eliminar(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const product = (yield this.db.query('DELETE FROM producto WHERE Id = ?', [id]))[0].affectedRows;
+            return product;
+        });
+    }
+    eliminarProductoProveedor(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const product = (yield this.db.query('DELETE FROM producto_proveedor WHERE Id = ?', [id]))[0].affectedRows;
             return product;
         });
     }

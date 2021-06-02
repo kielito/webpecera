@@ -10,13 +10,13 @@
         }
     </script>
     <div style="width:83%;margin-left:300px;">
-        <div style="display:inline;">Cargar Producto</div>
+        <div style="display:inline;">Cargar Producto</div>        
+        <div onClick="muestra('carga')" style="cursor:pointer;display: inline;">[+]</div>
+        <div onClick="oculta('carga')" style="cursor:pointer;display:inline;">[-]</div>
         <br>
         <button type="submit" style="clear:both;float:right;" class="btn btn-secondary"
             onclick="window.location.href='/product/upload'">Actualización Masiva</button>
         <br>
-        <div onClick="muestra('carga')" style="cursor:pointer;display: inline;">[+]</div>
-        <div onClick="oculta('carga')" style="cursor:pointer;display:inline;">[-]</div>
     </div>
     <div id="carga" style="display: none">
         <br>
@@ -81,7 +81,7 @@
             <td>{{StockActual}}</td>
             <td>${{PrecioVenta}}</td>
             <td>{{RazonSocial}}</td>
-            <td><a class="btn btn-secondary" href="">Modificar</a> <a class="btn btn-secondary" href="">Eliminar</a>
+            <td><a class="btn btn-secondary" href="/product/update/{{Id}}&{{CodigoProducto}}&{{RazonSocial}}">Modificar</a> <a class="btn btn-secondary" href="/product/delete/{{Id}}">Eliminar</a>
             </td>
         </tr>
         {{else}}

@@ -32,25 +32,35 @@ class ProductController {
         return res.json(producto);
     }
 
-    // solo agrega en la tabla 
+    // agrega en la tabla  producto y producto_proveedor
     public async addProduct(req: Request, res: Response) {
         const CodigoProducto = req.body;
         // los saco del form provisorio
         console.log(req.body);       
         // VALIDAR CAMPOS CodigoProducto para alta desde control.hbs
         const busqueda = await productModel.buscarCodigoProducto(CodigoProducto.CodigoProducto);
-        if (!busqueda) {
+        if (!busqueda) {            
             //const result = await productModel.crear(CodigoProducto);.
-            const result = await productModel.crear(CodigoProducto.CodigoProducto, CodigoProducto.Descripcion, CodigoProducto.StockMinimo);            
-            const result2 = await productModel.crearProductoProveedor(result, CodigoProducto.IdProveedor, CodigoProducto.StockActual, CodigoProducto.PrecioVenta); 
+            const result = await productModel.crear(CodigoProducto.CodigoProducto, CodigoProducto.Descripcion);
+            const result2 = await productModel.crearProductoProveedor(result, CodigoProducto.IdProveedor, CodigoProducto.StockMinimo, CodigoProducto.StockActual, CodigoProducto.PrecioVenta);
             req.flash('confirmacion', 'Producto creado correctamente.'); 
             res.redirect('../product/control');
             return;
         }
         else {
-            req.flash('error', 'El producto ya existe.'); 
-            res.redirect("../product/control"); 
-            return;           
+            // el producto existe verificar proveedor si no existe el proveedor cargo
+            const resultBuscarProdProv = await productModel.buscarProductoProveedor(busqueda.Id, CodigoProducto.IdProveedor);
+            if (!resultBuscarProdProv) { 
+                const resultCrearProdProv = await productModel.crearProductoProveedor(busqueda.Id, CodigoProducto.IdProveedor, CodigoProducto.StockMinimo, CodigoProducto.StockActual, CodigoProducto.PrecioVenta);
+                req.flash('confirmacion', 'Se a cargado el producto para un nuevo proveedor.'); 
+                res.redirect("../product/control"); 
+                return; 
+            }
+            else{               
+                req.flash('error', 'Producto existente para el proveedor.'); 
+                res.redirect("../product/control"); 
+                return; 
+            }                      
         }
     }
 
@@ -71,15 +81,39 @@ class ProductController {
         }
     }
 
+    public async updateProductoProveedor(req: Request, res: Response) {
+        const { id } = req.params;       
+        const productoProveedor = req.body;
+        delete productoProveedor.CodigoProducto;
+        delete productoProveedor.Descripcion;
+        delete productoProveedor.RazonSocial;
+        const result = await productModel.actualizarProductoProveedor(productoProveedor, id);            
+        if(result) {
+            req.flash('confirmacion','Producto modificado.');            
+            res.redirect('../control');    
+            return;			            
+        }
+        else
+        {
+            req.flash('error', 'No se pudo modificar el Producto Id: '+req.params.id+'.'); 
+            res.redirect('../control');    
+            return;		
+        }
+    }
+
     public async delete(req: Request, res: Response) {
         const { id } = req.params;
-        const result = await productModel.eliminar(id);
-        req.flash('confirmacion','Producto Id:'+req.params.id+', elminado.');        
+        const { CodigoProducto } = req.params;
+        const { IdProveedor } = req.params;
+        console.log(IdProveedor);
+        const result = await productModel.eliminarProductoProveedor(id);
+        req.flash('confirmacion','Se ha eliminado el producto para el proveedor.');        
         res.redirect('../control');
         return;       
-    }
+    }    
     //FIN CRUD
 
+    //MOSTRAR ABM
     public async control(req: Request, res: Response) {
         if (!req.session.auth) {            
             req.flash('error', 'Debes iniciar sesion para ver esta seccion');
@@ -87,22 +121,26 @@ class ProductController {
             return;
         }
         const productos = await productModel.listar();        
-        const proveedores = await productModel.listarProveedor();
-        
+        const proveedores = await productModel.listarProveedor();        
         res.render('partials/producto/productos', { products: productos, proveedor: proveedores,  mi_session: true });
         return;
     }
 
-    public async procesar(req:Request,res:Response){
-		const { id } = req.params;
-        const producto = await productModel.buscarId(id);
+    public async mostrarUpdate(req:Request,res:Response){
+        const { id } = req.params;
+        const { codigoProducto } = req.params;
+        const { razonSocial } = req.params;
+        console.log(codigoProducto);
+        const productoProveedor = await productModel.buscarIdProductoProveedor(id);
+        const producto = await productModel.buscarCodigoProducto(codigoProducto);
+        const proveedor = await productModel.listarProveedor();
+        if(productoProveedor !== undefined){            
+			res.render("partials/producto/update",{productoProveedor, producto, proveedor, razonSocial});
+        }                	
+	}
+    //FIN MOSTRAR ABM
 
-        if(producto !== undefined){            
-			res.render("partials/updateProducts",{producto});
-        }
-	}   
-
-    //Carga CSV
+    //CARGA CSV
     public async upload(req:Request,res:Response){
         res.render("partials/producto/uploadfile");
         return;
@@ -115,7 +153,7 @@ class ProductController {
         if(req.files){
             console.log(req.files);
             var file = req.files.file;
-            filename = file.name;
+            filename = file.name; // falso error
         }
 
         if(req.files !== null){        
@@ -139,8 +177,7 @@ class ProductController {
         
         res.render("partials/producto/uploadfile", { archivo: variable });
         return;
-    }
-    
+    }    
 
     public async updateCsv(req:Request,res:Response){
         let codigo = "";
@@ -174,6 +211,7 @@ class ProductController {
         res.redirect('./control');
         return;
 	}    
+    //FIN CARGA CSV
 
     public endSession(req: Request, res: Response) {
         req.session.user = {};
