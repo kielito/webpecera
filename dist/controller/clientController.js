@@ -66,7 +66,9 @@ class ClientController {
     control(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const clientes = yield clientModel_1.default.listar();
-            res.render('partials/cliente/clients', { clients: clientes });
+            const telefonos = yield clientModel_1.default.listarTelefonos();
+            console.log(telefonos);
+            res.render('partials/cliente/clients', { clients: clientes, telefono: telefonos });
         });
     }
     mostrarUpdate(req, res) {

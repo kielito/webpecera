@@ -114,6 +114,7 @@
                 <th>Localidad</th>
                 <th>Provincia</th>
                 <th>CodigoPostal</th>
+                <th>Telefono</th>
                 <th>Accion</th>
             </theader>
             {{#each clients}}
@@ -126,7 +127,8 @@
                 <td>{{Direccion}}</td>
                 <td>{{Localidad}}</td>
                 <td>{{Provincia}}</td>
-                <td>{{CodigoPostal}}</td>       
+                <td>{{CodigoPostal}}</td>   
+                <td>{{Telefono}}</td>
                 <td><a class="btn btn-info" href="/client/update/{{Id}}">Editar</a> <a class="btn btn-danger" href="/client/delete/{{Id}}">Eliminar</a></td>
             </tr>
             {{else}}

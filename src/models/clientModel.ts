@@ -25,7 +25,15 @@ class ClientModel {
 
 	async listar() {//Devuelve todas las filas de la tabla cliente
 		//const db=this.connection;
-		const clientes = await this.db.query('SELECT * FROM cliente');
+		const clientes = await this.db.query('SELECT cliente .*, CONCAT(telefono_cliente.Numero,"-",telefono_cliente.Tipo) AS Telefono FROM cliente LEFT JOIN telefono_cliente ON cliente.Id = telefono_cliente.IdCliente WHERE telefono_cliente.Principal = "Si"');
+		//console.log(clientes[0]);
+		//devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
+		return clientes[0];
+	}
+
+	async listarTelefonos() {//Devuelve todas las filas de la tabla cliente
+		//const db=this.connection;
+		const clientes = await this.db.query('SELECT * FROM telefono_cliente');
 		//console.log(clientes[0]);
 		//devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
 		return clientes[0];

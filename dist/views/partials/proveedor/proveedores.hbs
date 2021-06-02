@@ -109,7 +109,8 @@
                 <th>Provincia</th>
                 <th>Codigo Postal</th>
                 <th>Descripcion</th>
-                <th>Accion</th>                
+                <th>Telefono</th>
+                <th>Accion</th>
             </theader>
             {{#each supplier}}
             <tr>
@@ -122,6 +123,7 @@
                 <td>{{Provincia}}</td>
                 <td>{{CodigoPostal}}</td>
                 <td>{{Descripcion}}</td>
+                <td>{{Telefono}}</td>
                 <td><a class="btn btn-info" href="/supplier/update/{{Id}}">Editar</a> <a class="btn btn-danger" href="/supplier/delete/{{Id}}">Eliminar</a></td>
             </tr>
             {{else}}

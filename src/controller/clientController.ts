@@ -48,7 +48,9 @@ class ClientController{
 
     public async control(req:Request,res:Response){
         const clientes = await clientModel.listar();
-        res.render('partials/cliente/clients', { clients: clientes });		
+        const telefonos = await clientModel.listarTelefonos();
+        console.log(telefonos);
+        res.render('partials/cliente/clients', { clients: clientes, telefono: telefonos });		
 	}
 
     public async mostrarUpdate(req:Request,res:Response){
