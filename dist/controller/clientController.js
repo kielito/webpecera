@@ -14,31 +14,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const clientModel_1 = __importDefault(require("../models/clientModel"));
 class ClientController {
-    //CRUD
-    list(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body);
-            const clientes = yield clientModel_1.default.listar();
-            console.log(clientes);
-            return res.json(clientes);
-        });
-    }
-    find(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.params.id);
-            const { id } = req.params;
-            const cliente = yield clientModel_1.default.buscarId(id);
-            if (cliente)
-                return res.json(cliente);
-            res.status(404).json({ text: "Client doesn't exists" });
-        });
+    //CRUD   
+    add(req, res) {
+        res.render("partials/cliente/alta");
     }
     addClient(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const cliente = req.body;
+            const telefono = {
+                Numero: cliente.Numero,
+                Tipo: cliente.Tipo,
+                Principal: "Si",
+                IdCliente: ""
+            };
+            delete cliente.Numero;
+            delete cliente.Tipo;
             const busqueda = yield clientModel_1.default.buscarCliente(cliente.NumeroDocumento);
             if (!busqueda) {
-                const result = yield clientModel_1.default.crear(cliente);
+                telefono.IdCliente = yield clientModel_1.default.crear(cliente);
+                yield clientModel_1.default.crearTelefono(telefono);
                 req.flash('confirmacion', 'Cliente registrado correctamente!');
                 return res.redirect("../control");
             }
@@ -49,7 +43,27 @@ class ClientController {
     update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const result = yield clientModel_1.default.actualizar(req.body, id);
+            const cliente = req.body;
+            if (cliente.Numero instanceof Array) {
+                for (let i = 0; i < cliente.Numero.length; i++) {
+                    const telefono = {
+                        Numero: cliente.Numero[i],
+                        Tipo: cliente.Tipo[i]
+                    };
+                    yield clientModel_1.default.actualizarTelefono(telefono, cliente.Id[i]);
+                }
+            }
+            else {
+                let telefono = {
+                    Numero: cliente.Numero,
+                    Tipo: cliente.Tipo
+                };
+                yield clientModel_1.default.actualizarTelefono(telefono, cliente.Id);
+            }
+            delete cliente.Numero;
+            delete cliente.Tipo;
+            delete cliente.Id;
+            yield clientModel_1.default.actualizar(cliente, id);
             req.flash('confirmacion', 'Cliente actualizado correctamente!');
             return res.redirect("../control");
         });
@@ -57,7 +71,8 @@ class ClientController {
     delete(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const result = yield clientModel_1.default.eliminar(id);
+            yield clientModel_1.default.eliminarTelefono(id);
+            yield clientModel_1.default.eliminar(id);
             req.flash('confirmacion', 'Cliente eliminado correctamente!');
             return res.redirect("../control");
         });
@@ -67,16 +82,16 @@ class ClientController {
         return __awaiter(this, void 0, void 0, function* () {
             const clientes = yield clientModel_1.default.listar();
             const telefonos = yield clientModel_1.default.listarTelefonos();
-            console.log(telefonos);
-            res.render('partials/cliente/clients', { clients: clientes, telefono: telefonos });
+            res.render('partials/cliente/clientes', { clients: clientes, telefono: telefonos });
         });
     }
     mostrarUpdate(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const cliente = yield clientModel_1.default.buscarId(id);
-            if (cliente !== undefined) {
-                res.render("partials/cliente/update", { cliente });
+            const clientes = yield clientModel_1.default.buscarId(id);
+            const telefonos = yield clientModel_1.default.buscarIdTelefono(id);
+            if (clientes !== undefined) {
+                res.render("partials/cliente/update", { cliente: clientes, telefono: telefonos });
             }
         });
     }

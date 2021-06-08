@@ -2,12 +2,15 @@
     <div class="contenedor">
         <div class="container p-4">
             <br>
-            <form action="../update/{{cliente.Id}}" method="POST" style="width:70%;;margin-left:300px;">
+            <form action="/client/add/{{cliente.Id}}" method="POST" style="width:70%;;margin-left:300px;">
+                 <div class="form-group">
+                    <h3>Alta Cliente</h3>
+                    <br>
+                </div>
                 <div class="form-group">
                     <label for="exampleInputName1">Tipo de documento</label>
                     <select class="form-control" name="TipoDocumento" required>
-                        <option value="{{cliente.TipoDocumento}}" selected>{{cliente.TipoDocumento}}
-                        </option>
+                        <option value="" selected>Seleccionar</option>
                         <option value="DNI">DNI</option>
                         <option value="CUIL">CUIL</option>
                         <option value="CUIT">CUIT</option>
@@ -16,36 +19,30 @@
                 </div>
                 <div class="form-group">
                     <label>Número de Documento</label>
-                    <input type="number" class="form-control" name="NumeroDocumento" id="exampleInputName2"
-                        value="{{cliente.NumeroDocumento}}" required>
+                    <input type="number" class="form-control" name="NumeroDocumento" placeholder="Numero Documento" required>                    
                 </div>
                 <div class="form-group">
                     <label>Nombre</label>
-                    <input type="text" class="form-control" name="Nombre" id="exampleInputName2"
-                        value="{{cliente.Nombre}}" required>
+                    <input type="text" class="form-control" name="Nombre" placeholder="Nombre" required>
                 </div>
                 <div class="form-group">
                     <label>Apellido</label>
-                    <input type="text" class="form-control" name="Apellido" id="exampleInputName2"
-                        value="{{cliente.Apellido}}" required>
+                    <input type="text" class="form-control" name="Apellido" placeholder="Apellido" required>
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="text" class="form-control" name="Email" id="exampleInputName2"
-                        value="{{cliente.Email}}" required>
+                    <input type="text" class="form-control" name="Email" placeholder="Email" required>
                 </div>
                 <div class="form-group">
                     <label>Dirección</label>
-                    <input type="text" class="form-control" name="Direccion" id="exampleInputName2"
-                        value="{{cliente.Direccion}}" required>
-                </div>                
+                    <input type="text" class="form-control" name="Direccion" placeholder="Direccion" required>
+                </div>
                 <div class="form-group">
-                    <label for="exampleInputName1">Provincia</label>
+                    <label>Provincia</label>
                     <select class="form-control" name="Provincia" required>
-                        <option value="{{cliente.Provincia}}" selected>{{cliente.Provincia}}
-                        </option>
+                        <option value="" selected>Seleccionar</option>
                         <option value="Buenos Aires">Buenos Aires</option>
-                        <option value="Buenos Aires Capital">Buenos Aires Capital</option>
+                        <option value="Capital Federal">Capital Federa</option>
                         <option value="Catamarca">Catamarca</option>
                         <option value="Chaco">Chaco</option>
                         <option value="Chubut">Chubut</option>
@@ -72,29 +69,24 @@
                 </div>
                 <div class="form-group">
                     <label>Localidad</label>
-                    <input type="text" class="form-control" name="Localidad" id="exampleInputName2"
-                        value="{{cliente.Localidad}}" required>
+                    <input type="text" class="form-control" name="Localidad" placeholder="Localidad" required>
                 </div>
                 <div class="form-group">
                     <label>Código Postal</label>
-                    <input type="text" class="form-control" name="CodigoPostal" id="exampleInputName2"
-                        value="{{cliente.CodigoPostal}}" required>
+                    <input type="number" class="form-control" name="CodigoPostal" placeholder="Código Postal" required>
                 </div>
-                {{#each telefono}}
-                    <div class="form-group">
-                        <label>Telefono</label>                                                
-                        <input type="text" class="form-control" name="Numero" value="{{Numero}}" required>
-                        <input type="text" class="form-control" name="Id" value="{{Id}}" hidden>
-                    </div>
-                    <div class="form-group">                    
-                        <label>Tipo</label>
-                        <select class="form-control" name="Tipo" required>
-                            <option value="{{Tipo}}">{{Tipo}}</option>
-                            <option value="Celular">Celular</option>
-                            <option value="Fijo">Fijo</option>
-                        </select>
-                    </div>
-                {{/each}}
+                <div class="form-group">
+                    <label>Telefono</label>
+                    <input type="number" class="form-control" name="Numero" placeholder="Numero" required>                    
+                </div>
+                <div class="form-group">                    
+                    <label>Tipo</label>
+                    <select class="form-control" name="Tipo" required>
+                        <option value="">Seleccionar</option>
+                        <option value="Celular">Celular</option>
+                        <option value="Fijo">Fijo</option>
+                    </select>
+                </div>
         </div>
         <div style="width:80%;;margin-left:320px;" align="center">
             <button class="btn btn-primary">Guardar</button>
@@ -102,7 +94,7 @@
         </form>
         <br>
         <div style="width:80%;;margin-left:320px;" align="center">
-            <button class="btn btn-success" onclick="window.location.href='/client/control';">Volver</button>
+            <button class="btn btn-success" onclick="window.location.href='/user/users';">Volver</button>
         </div>
     </div>
     </div>

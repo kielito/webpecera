@@ -60,6 +60,15 @@ class ClientModel {
             return null;
         });
     }
+    buscarIdTelefono(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const encontrado = yield this.db.query('SELECT * FROM telefono_cliente WHERE IdCliente = ?', [id]);
+            //Ojo la consulta devuelve una tabla de una fila. (Array de array) Hay que desempaquetar y obtener la unica fila al enviar
+            if (encontrado.length > 1)
+                return encontrado[0];
+            return null;
+        });
+    }
     //Devuelve un objeto cuya fila en la tabla cliente coincide con nombre.
     //Si no la encuentra devuelve null
     buscarCliente(numeroDocumento) {
@@ -74,8 +83,13 @@ class ClientModel {
     //Devuelve 1 si logro crear un nuevo cliente de la tabla cliente
     crear(cliente) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = (yield this.db.query('INSERT INTO cliente SET ?', [cliente]))[0].affectedRows;
-            console.log(result);
+            const result = (yield this.db.query('INSERT INTO cliente SET ?', [cliente]))[0].insertId;
+            return result;
+        });
+    }
+    crearTelefono(telefono) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = (yield this.db.query('INSERT INTO telefono_cliente SET ?', [telefono]))[0];
             return result;
         });
     }
@@ -83,7 +97,12 @@ class ClientModel {
     actualizar(cliente, id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = (yield this.db.query('UPDATE cliente SET ? WHERE Id = ?', [cliente, id]))[0].affectedRows;
-            console.log(result);
+            return result;
+        });
+    }
+    actualizarTelefono(telefono, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = (yield this.db.query('UPDATE telefono_cliente SET ? WHERE Id = ?', [telefono, id]))[0].affectedRows;
             return result;
         });
     }
@@ -91,7 +110,12 @@ class ClientModel {
     eliminar(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = (yield this.db.query('DELETE FROM cliente WHERE Id = ?', [id]))[0].affectedRows;
-            console.log(user);
+            return user;
+        });
+    }
+    eliminarTelefono(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = (yield this.db.query('DELETE FROM telefono_cliente WHERE IdCliente = ?', [id]))[0].affectedRows;
             return user;
         });
     }

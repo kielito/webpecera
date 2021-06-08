@@ -18,7 +18,6 @@ class ClientModel {
 			user: 'b0e0fd43ed8818',
 			password: '2b1f9d39',
 			database: 'heroku_4505cc56058eb11',
-			
 			connectionLimit: 10
 		});
 	}
@@ -48,6 +47,14 @@ class ClientModel {
 			return encontrado[0][0];
 		return null;
 	}
+
+	async buscarIdTelefono(id: string) {
+		const encontrado: any = await this.db.query('SELECT * FROM telefono_cliente WHERE IdCliente = ?', [id]);
+		//Ojo la consulta devuelve una tabla de una fila. (Array de array) Hay que desempaquetar y obtener la unica fila al enviar
+		if (encontrado.length > 1)
+			return encontrado[0];
+		return null;
+	}
 	
 	//Devuelve un objeto cuya fila en la tabla cliente coincide con nombre.
 	//Si no la encuentra devuelve null
@@ -61,22 +68,34 @@ class ClientModel {
 
 	//Devuelve 1 si logro crear un nuevo cliente de la tabla cliente
 	async crear(cliente: object) {
-		const result = (await this.db.query('INSERT INTO cliente SET ?', [cliente]))[0].affectedRows;
-		console.log(result);
+		const result = (await this.db.query('INSERT INTO cliente SET ?', [cliente]))[0].insertId;		
+		return result;
+	}
+
+	async crearTelefono(telefono: object) {
+		const result = (await this.db.query('INSERT INTO telefono_cliente SET ?', [telefono]))[0];		
 		return result;
 	}
 
 	//Devuelve 1 si logro actualizar el cliente indicado por id
-	async actualizar(cliente: object, id: string) {
-		const result = (await this.db.query('UPDATE cliente SET ? WHERE Id = ?', [cliente, id]))[0].affectedRows;
-		console.log(result);
+	async actualizar(cliente: object, id: string) {		
+		const result = (await this.db.query('UPDATE cliente SET ? WHERE Id = ?', [cliente, id]))[0].affectedRows;		
+		return result;
+	}
+
+	async actualizarTelefono(telefono: object, id: string) {
+		const result = (await this.db.query('UPDATE telefono_cliente SET ? WHERE Id = ?', [telefono, id]))[0].affectedRows;		
 		return result;
 	}
 
 	//Devuelve 1 si logro eliminar el cliente indicado por id
 	async eliminar(id: string) {
-		const user = (await this.db.query('DELETE FROM cliente WHERE Id = ?', [id]))[0].affectedRows;
-		console.log(user);
+		const user = (await this.db.query('DELETE FROM cliente WHERE Id = ?', [id]))[0].affectedRows;		
+		return user;
+	}
+
+	async eliminarTelefono(id: string) {
+		const user = (await this.db.query('DELETE FROM telefono_cliente WHERE IdCliente = ?', [id]))[0].affectedRows;		
 		return user;
 	}
 }

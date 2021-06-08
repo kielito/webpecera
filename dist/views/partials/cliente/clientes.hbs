@@ -1,0 +1,51 @@
+<body style="background-color: #d1ffe2;">
+    <div class="contenedor">       
+        <div style="width:83%;margin-left:300px;">
+            <BR>
+            <h4>Listado de Clientes</h4>
+            <button class="btn btn-primary" style="clear:both;float:right;" onclick="window.location.href='add';">Agregar</button>
+            <br>
+        </div>
+        <br>
+        <table class="table table-striped" style="width:83%;;margin-left:300px;">
+            <theader>
+                <th>TipoDocumento</th>
+                <th>NumeroDocumento</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Direccion</th>
+                <th>Localidad</th>
+                <th>Provincia</th>
+                <th>CodigoPostal</th>
+                <th>Telefono</th>
+                <th>Accion</th>
+            </theader>
+            {{#each clients}}
+            <tr>
+                <td>{{TipoDocumento}}</td>
+                <td>{{NumeroDocumento}}</td>
+                <td>{{Nombre}}</td>
+                <td>{{Apellido}}</td>
+                <td>{{Email}}</td>
+                <td>{{Direccion}}</td>
+                <td>{{Localidad}}</td>
+                <td>{{Provincia}}</td>
+                <td>{{CodigoPostal}}</td>   
+                <td>{{Telefono}}</td>
+                <td><a class="btn btn-info" href="/client/update/{{Id}}">Editar</a> <a class="btn btn-danger" href="/client/delete/{{Id}}">Eliminar</a></td>
+            </tr>
+            {{else}}
+            <tr>
+                <td colspan="10">No hay mas filas</td>
+            </tr>
+            {{/each}}
+        </table>
+        <div style="width:80%;;margin-left:320px;">        
+            <div align="center">
+                <br>            
+                <button class="btn btn-success" onclick="window.location.href='/user/home';" align="center">Volver</button>
+            </div>
+        </div>
+    </div>
+</body>

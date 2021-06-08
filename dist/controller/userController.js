@@ -96,17 +96,17 @@ class UserController {
     addUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const usuario = req.body;
-            if (usuario.password.length === 0) {
+            if (usuario.Password.length === 0) {
                 req.flash('error', 'Debe ingresar una clave!');
                 return res.redirect("./signup");
             }
-            if (usuario.password !== usuario.repassword) {
+            if (usuario.Password !== usuario.repassword) {
                 req.flash('error', 'Verifique la clave ingresada!');
                 return res.redirect("./signup");
             }
             delete usuario.repassword;
-            usuario.password = yield userModel_1.default.encriptarPassword(usuario.password);
-            const busqueda = yield userModel_1.default.buscarNombre(usuario.usuario);
+            usuario.Password = yield userModel_1.default.encriptarPassword(usuario.Password);
+            const busqueda = yield userModel_1.default.buscarNombre(usuario.Usuario);
             if (!busqueda) {
                 const result = yield userModel_1.default.crear(usuario);
                 if (!result)

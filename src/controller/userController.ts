@@ -92,19 +92,19 @@ class UserController{
 	public async addUser(req:Request,res:Response){
 		const usuario = req.body;
         
-        if(usuario.password.length === 0){
+        if(usuario.Password.length === 0){
 			req.flash('error','Debe ingresar una clave!');
 			return res.redirect("./signup");
 		}
 
-		if(usuario.password !== usuario.repassword){
+		if(usuario.Password !== usuario.repassword){
 			req.flash('error','Verifique la clave ingresada!');
 			return res.redirect("./signup");
 		}
 		delete usuario.repassword;
 
-        usuario.password = await userModel.encriptarPassword(usuario.password);
-        const busqueda = await userModel.buscarNombre(usuario.usuario);
+        usuario.Password = await userModel.encriptarPassword(usuario.Password);
+        const busqueda = await userModel.buscarNombre(usuario.Usuario);
         
         if (!busqueda) {
             const result = await userModel.crear(usuario);

@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerSchema = void 0;
 const express_validator_1 = require("express-validator");
 const schema = [
-    express_validator_1.body('usuario')
+    express_validator_1.body('Usuario')
         .isLength({ min: 3, max: 10 })
         .withMessage('Usuario debe contener minimo 3 caracteres y maximo 10!'),
-    express_validator_1.body('password')
+    express_validator_1.body('Password')
         .isLength({ min: 3, max: 10 })
         .withMessage('Password debe contener minimo 3 caracteres y maximo 10!')
 ];

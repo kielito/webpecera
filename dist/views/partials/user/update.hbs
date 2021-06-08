@@ -1,5 +1,6 @@
 <body style="background-color: #d1ffe2;">
-    <div class="container p-4">        
+    <div class="contenedor">
+        <div class="container p-4">        
             <br>            
             <form action="../update/{{usuario.Id}}" method="POST" style="width:70%;;margin-left:300px;">
                 <div class="form-group">
@@ -34,7 +35,7 @@
                 <div class="form-group">
                     <label for="exampleInputName1">Perfil</label>
                     <select class="form-control" name="Perfil" required>
-                        <option value="{{usuario.Perfil}}">Seleccionar</option>
+                        <option value="{{usuario.Perfil}}">{{usuario.Perfil}}</option>
                         <option value="Admin">Admin</option>
                         <option value="Usuario">Usuario</option>
                     </select>
@@ -47,6 +48,7 @@
             <div style="width:70%;;margin-left:303px;" align="center">                
                 <button class="btn btn-success" onclick="window.location.href='/user/users';">Volver</button>                
             </div>
+        </div>
     </div>    
 </body>
 

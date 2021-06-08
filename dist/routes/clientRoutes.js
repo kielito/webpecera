@@ -16,8 +16,7 @@ class UserRoutes {
             res.render("partials/principal");
         });
         //CRUD
-        this.router.get('/list', clientController_1.default.list);
-        this.router.get('/find/:id', clientController_1.default.find);
+        this.router.get('/add', clientController_1.default.add);
         this.router.post('/add', clientController_1.default.addClient);
         this.router.get('/update/:id', clientController_1.default.mostrarUpdate);
         this.router.post('/update/:id', clientController_1.default.update);
