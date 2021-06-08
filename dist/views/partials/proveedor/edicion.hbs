@@ -1,0 +1,98 @@
+<body style="background-color: #d1ffe2;">
+    <div class="contenedor">
+        <div class="container p-4">
+            <br>
+            <form action="../update/{{proveedor.Id}}" method="POST" style="width:70%;;margin-left:300px;">                                
+                <div class="form-group">                    
+                    <label>Tipo Documento</label>
+                    <select class="form-control" name="TipoDocumento" required>
+                                        <option value="{{proveedor.TipoDocumento}}">{{proveedor.TipoDocumento}}</option>
+                                        <option value="DNI">DNI</option>
+                                        <option value="CUIL">CUIL</option>
+                                        <option value="CUIT">CUIT</option>
+                                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Número de Documento</label>
+                    <input class="form-control" type="text" name="NumeroDocumento" value="{{proveedor.NumeroDocumento}}" autofocus required>
+                </div>
+                <div class="form-group">
+                    <label>Razón Social</label>
+                    <input class="form-control" type="text" name="RazonSocial" value="{{proveedor.RazonSocial}}" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input class="form-control" type="email" name="Email" value="{{proveedor.Email}}" required>
+                </div>
+                <div class="form-group">
+                    <label>Dirección</label>
+                    <input class="form-control" type="text" name="Direccion" value="{{proveedor.Direccion}}" required>
+                </div>                
+                <div class="form-group">
+                    <label>Provincia</label>
+                    <select class="form-control" name="Provincia" required>
+                                        <option value="{{proveedor.Provincia}}" selected>{{proveedor.Provincia}}</option>
+                                        <option value="Buenos Aires">Buenos Aires</option>
+                                        <option value="Capital Federal">Capital Federal</option>
+                                        <option value="Catamarca">Catamarca</option>
+                                        <option value="Chaco">Chaco</option>
+                                        <option value="Chubut">Chubut</option>
+                                        <option value="Cordoba">Cordoba</option>
+                                        <option value="Corrientes">Corrientes</option>
+                                        <option value="Entre Rios">Entre Rios</option>
+                                        <option value="Formosa">Formosa</option>
+                                        <option value="Jujuy">Jujuy</option>
+                                        <option value="La Pampa">La Pampa</option>
+                                        <option value="La Rioja">La Rioja</option>
+                                        <option value="Mendoza">Mendoza</option>
+                                        <option value="Misiones">Misiones</option>
+                                        <option value="Neuquen">Neuquen</option>
+                                        <option value="Rio Negro">Rio Negro</option>
+                                        <option value="Salta">Salta</option>
+                                        <option value="San Juan">San Juan</option>
+                                        <option value="San Luis">San Luis</option>
+                                        <option value="Santa Cruz">Santa Cruz</option>
+                                        <option value="Santa Fe">Santa Fe</option>
+                                        <option value="Santiago del Estero">Santiago del Estero</option>
+                                        <option value="Tierra del Fuego">Tierra del Fuego</option>
+                                        <option value="Tucuman">Tucuman</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Localidad</label>
+                    <input class="form-control" type="text" name="Localidad" value="{{proveedor.Localidad}}" required>
+                </div>
+                <div class="form-group">
+                    <label>Código Postal</label>
+                    <input class="form-control" type="text" name="CodigoPostal" value="{{proveedor.CodigoPostal}}" required>
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <input class="form-control" type="text" name="Descripcion" value="{{proveedor.Descripcion}}" required>
+                </div>
+                {{#each telefono}}
+                    <div class="form-group">
+                        <label>Telefono</label>                                                
+                        <input type="text" class="form-control" name="Numero" value="{{Numero}}" required>
+                        <input type="text" class="form-control" name="Id" value="{{Id}}" hidden>
+                    </div>
+                    <div class="form-group">                    
+                        <label>Tipo</label>
+                        <select class="form-control" name="Tipo" required>
+                            <option value="{{Tipo}}">{{Tipo}}</option>
+                            <option value="Celular">Celular</option>
+                            <option value="Fijo">Fijo</option>
+                        </select>
+                    </div>
+                {{/each}}                
+                <div style="width:90%;;margin-left:30px;" align="center">
+                    <button class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+        <div style="width:80%;;margin-left:320px;" align="center">
+            <button class="btn btn-success" onclick="window.location.href='/supplier/control';">Volver</button>
+        </div>
+    </div>
+</body>

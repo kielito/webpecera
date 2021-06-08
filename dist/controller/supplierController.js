@@ -15,54 +15,61 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supplierModel_1 = __importDefault(require("../models/supplierModel"));
 class SupplierController {
     //CRUD
-    list(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body);
-            const proveedores = yield supplierModel_1.default.listar();
-            console.log(proveedores);
-            return res.json(proveedores);
-            //res.send('Listado de clientes!!!');
-        });
-    }
-    find(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.params.id);
-            const { id } = req.params;
-            const proveedores = yield supplierModel_1.default.buscarId(id);
-            if (proveedores)
-                return res.json(proveedores);
-            res.status(404).json({ text: "Supplier doesn't exists" });
-        });
+    add(req, res) {
+        res.render("partials/proveedor/alta");
     }
     addSupplier(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const proveedor = req.body;
-            console.log(req.body);
-            //res.send('Proveedor agregado!!!');
+            const telefono = {
+                Numero: proveedor.Numero,
+                Tipo: proveedor.Tipo,
+                Principal: "Si",
+                IdProveedor: ""
+            };
+            delete proveedor.Numero;
+            delete proveedor.Tipo;
             const busqueda = yield supplierModel_1.default.buscarProveedor(proveedor.RazonSocial); // Hace referencia al campo Usuario de la tabla usuario.
             if (!busqueda) {
-                const result = yield supplierModel_1.default.crear(proveedor);
+                telefono.IdProveedor = yield supplierModel_1.default.crear(proveedor);
+                yield supplierModel_1.default.crearTelefono(telefono);
                 req.flash('confirmacion', 'Proveedor registrado correctamente!');
-                return res.redirect("../supplier/control");
+                return res.redirect("../control");
             }
             req.flash('error', 'El proveedor ya se encuentra registrado!');
-            return res.redirect("../supplier/control");
+            return res.redirect("../control");
         });
     }
     update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body);
             const { id } = req.params;
-            const result = yield supplierModel_1.default.actualizar(req.body, id);
-            //res.send('Proveedor '+ req.params.id +' actualizado!!!');
+            const cliente = req.body;
+            if (cliente.Numero instanceof Array) {
+                for (let i = 0; i < cliente.Numero.length; i++) {
+                    const telefono = {
+                        Numero: cliente.Numero[i],
+                        Tipo: cliente.Tipo[i]
+                    };
+                    yield supplierModel_1.default.actualizarTelefono(telefono, cliente.Id[i]);
+                }
+            }
+            else {
+                let telefono = {
+                    Numero: cliente.Numero,
+                    Tipo: cliente.Tipo
+                };
+                yield supplierModel_1.default.actualizarTelefono(telefono, cliente.Id);
+            }
+            delete cliente.Numero;
+            delete cliente.Tipo;
+            delete cliente.Id;
+            yield supplierModel_1.default.actualizar(cliente, id);
             req.flash('confirmacion', 'Proveedor actualizado correctamente!');
             return res.redirect("../control");
         });
     }
     delete(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body);
-            //res.send('Proveedor '+ req.params.id +' Eliminado!!!');
             const { id } = req.params; // hacemos detrucsturing y obtenemos el ID. Es decir, obtenemos una parte de un objeto JS.
             const result = yield supplierModel_1.default.eliminar(id);
             req.flash('confirmacion', 'Proveedor eliminado correctamente!');
@@ -72,7 +79,6 @@ class SupplierController {
     //FIN CRUD
     control(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            //res.send('Controles');
             const proveedores = yield supplierModel_1.default.listar();
             res.render('partials/proveedor/proveedores', { supplier: proveedores });
         });
@@ -81,8 +87,9 @@ class SupplierController {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             const proveedor = yield supplierModel_1.default.buscarId(id);
+            const telefonos = yield supplierModel_1.default.buscarIdTelefono(id);
             if (proveedor !== undefined) {
-                res.render("partials/proveedor/update", { proveedor });
+                res.render("partials/proveedor/edicion", { proveedor, telefono: telefonos });
             }
         });
     }

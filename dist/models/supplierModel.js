@@ -40,6 +40,15 @@ class SupplierModel {
             return proveedores[0];
         });
     }
+    listarTelefonos() {
+        return __awaiter(this, void 0, void 0, function* () {
+            //const db=this.connection;
+            const clientes = yield this.db.query('SELECT * FROM telefono_proveedor');
+            //console.log(clientes[0]);
+            //devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
+            return clientes[0];
+        });
+    }
     //Devuelve un objeto cuya fila en la tabla proveedores coincide con id.
     //Si no la encuentra devuelve null
     buscarId(id) {
@@ -48,6 +57,15 @@ class SupplierModel {
             //Ojo la consulta devuelve una tabla de una fila. (Array de array) Hay que desempaquetar y obtener la unica fila al enviar
             if (encontrado.length > 1)
                 return encontrado[0][0];
+            return null;
+        });
+    }
+    buscarIdTelefono(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const encontrado = yield this.db.query('SELECT * FROM telefono_proveedor WHERE IdProveedor = ?', [id]);
+            //Ojo la consulta devuelve una tabla de una fila. (Array de array) Hay que desempaquetar y obtener la unica fila al enviar
+            if (encontrado.length > 1)
+                return encontrado[0];
             return null;
         });
     }
@@ -65,8 +83,14 @@ class SupplierModel {
     //Devuelve 1 si logro crear un nuevo proveedor de la tabla proveedores
     crear(proveedor) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = (yield this.db.query('INSERT INTO proveedor SET ?', [proveedor]))[0].affectedRows;
+            const result = (yield this.db.query('INSERT INTO proveedor SET ?', [proveedor]))[0].insertId;
             console.log(result);
+            return result;
+        });
+    }
+    crearTelefono(telefono) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = (yield this.db.query('INSERT INTO telefono_proveedor SET ?', [telefono]))[0];
             return result;
         });
     }
@@ -78,12 +102,24 @@ class SupplierModel {
             return result;
         });
     }
+    actualizarTelefono(telefono, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = (yield this.db.query('UPDATE telefono_proveedor SET ? WHERE Id = ?', [telefono, id]))[0].affectedRows;
+            return result;
+        });
+    }
     //Devuelve 1 si logro eliminar el proveedor indicado por id
     eliminar(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const supplier = (yield this.db.query('DELETE FROM proveedor WHERE Id = ?', [id]))[0].affectedRows;
             console.log(supplier);
             return supplier;
+        });
+    }
+    eliminarTelefono(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = (yield this.db.query('DELETE FROM telefono_proveedor WHERE IdProveedor = ?', [id]))[0].affectedRows;
+            return user;
         });
     }
 }

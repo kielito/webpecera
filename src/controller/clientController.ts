@@ -82,7 +82,7 @@ class ClientController{
         const clientes = await clientModel.buscarId(id);
         const telefonos = await clientModel.buscarIdTelefono(id);
         if(clientes !== undefined){            
-			res.render("partials/cliente/update",{cliente: clientes, telefono: telefonos});
+			res.render("partials/cliente/edicion",{cliente: clientes, telefono: telefonos});
         }        	
 	}
 }

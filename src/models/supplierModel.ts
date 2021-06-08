@@ -31,6 +31,14 @@ class SupplierModel {
 		return proveedores[0];
 	}
 
+	async listarTelefonos() {//Devuelve todas las filas de la tabla cliente
+		//const db=this.connection;
+		const clientes = await this.db.query('SELECT * FROM telefono_proveedor');
+		//console.log(clientes[0]);
+		//devuelve tabla mas propiedades. Solo debemos devolver tabla. Posicion 0 del array devuelto.
+		return clientes[0];
+	}
+
 	//Devuelve un objeto cuya fila en la tabla proveedores coincide con id.
 	//Si no la encuentra devuelve null
 	async buscarId(id: string) {
@@ -38,6 +46,14 @@ class SupplierModel {
 		//Ojo la consulta devuelve una tabla de una fila. (Array de array) Hay que desempaquetar y obtener la unica fila al enviar
 		if (encontrado.length > 1)
 			return encontrado[0][0];
+		return null;
+	}
+	
+	async buscarIdTelefono(id: string) {
+		const encontrado: any = await this.db.query('SELECT * FROM telefono_proveedor WHERE IdProveedor = ?', [id]);
+		//Ojo la consulta devuelve una tabla de una fila. (Array de array) Hay que desempaquetar y obtener la unica fila al enviar
+		if (encontrado.length > 1)
+			return encontrado[0];
 		return null;
 	}
 	
@@ -53,8 +69,13 @@ class SupplierModel {
 
 	//Devuelve 1 si logro crear un nuevo proveedor de la tabla proveedores
 	async crear(proveedor: object) {
-		const result = (await this.db.query('INSERT INTO proveedor SET ?', [proveedor]))[0].affectedRows;
+		const result = (await this.db.query('INSERT INTO proveedor SET ?', [proveedor]))[0].insertId;
 		console.log(result);
+		return result;
+	}
+
+	async crearTelefono(telefono: object) {
+		const result = (await this.db.query('INSERT INTO telefono_proveedor SET ?', [telefono]))[0];		
 		return result;
 	}
 
@@ -65,11 +86,21 @@ class SupplierModel {
 		return result;
 	}
 
+	async actualizarTelefono(telefono: object, id: string) {
+		const result = (await this.db.query('UPDATE telefono_proveedor SET ? WHERE Id = ?', [telefono, id]))[0].affectedRows;		
+		return result;
+	}
+
 	//Devuelve 1 si logro eliminar el proveedor indicado por id
 	async eliminar(id: string) {
 		const supplier = (await this.db.query('DELETE FROM proveedor WHERE Id = ?', [id]))[0].affectedRows;
 		console.log(supplier);
 		return supplier;
+	}
+
+	async eliminarTelefono(id: string) {
+		const user = (await this.db.query('DELETE FROM telefono_proveedor WHERE IdProveedor = ?', [id]))[0].affectedRows;		
+		return user;
 	}
 }
 

@@ -91,7 +91,7 @@ class ClientController {
             const clientes = yield clientModel_1.default.buscarId(id);
             const telefonos = yield clientModel_1.default.buscarIdTelefono(id);
             if (clientes !== undefined) {
-                res.render("partials/cliente/update", { cliente: clientes, telefono: telefonos });
+                res.render("partials/cliente/edicion", { cliente: clientes, telefono: telefonos });
             }
         });
     }

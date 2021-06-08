@@ -12,8 +12,9 @@ class SupplierRoutes{
             res.render("partials/principal");              
         });        
         //CRUD
-        this.router.get('/list',supplierController.list);
-        this.router.get('/find/:id',supplierController.find);
+        /*this.router.get('/list',supplierController.list);
+        this.router.get('/find/:id',supplierController.find);*/
+        this.router.get('/add',supplierController.add);
         this.router.post('/add',supplierController.addSupplier);    
         this.router.get('/update/:id',supplierController.mostrarUpdate);
 		this.router.post('/update/:id',supplierController.update);

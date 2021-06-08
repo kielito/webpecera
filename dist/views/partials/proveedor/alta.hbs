@@ -2,10 +2,9 @@
     <div class="contenedor">
         <div class="container p-4">
             <br>
-            <form action="/client/add/{{cliente.Id}}" method="POST" style="width:70%;;margin-left:300px;">
+            <form action="/supplier/add/{{proveedor.Id}}" method="POST" style="width:70%;;margin-left:300px;">
                  <div class="form-group">
-                    <h3>Alta Cliente</h3>
-                    <br>
+                    <h3>Alta Proveedor</h3>
                 </div>
                 <div class="form-group">
                     <label>Tipo de documento</label>
@@ -22,12 +21,8 @@
                     <input type="number" class="form-control" name="NumeroDocumento" placeholder="Numero Documento" required>                    
                 </div>
                 <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" class="form-control" name="Nombre" placeholder="Nombre" required>
-                </div>
-                <div class="form-group">
-                    <label>Apellido</label>
-                    <input type="text" class="form-control" name="Apellido" placeholder="Apellido" required>
+                    <label>Razón Social</label>
+                    <input type="text" class="form-control" name="RazonSocial" placeholder="Razón Social" required>
                 </div>
                 <div class="form-group">
                     <label>Email</label>
@@ -76,6 +71,10 @@
                     <input type="number" class="form-control" name="CodigoPostal" placeholder="Código Postal" required>
                 </div>
                 <div class="form-group">
+                    <label>Descripción</label>
+                    <input class="form-control" type="text" name="Descripcion" placeholder="Descripción" required>
+                </div>
+                <div class="form-group">
                     <label>Telefono</label>
                     <input type="number" class="form-control" name="Numero" placeholder="Numero" required>                    
                 </div>
@@ -86,14 +85,16 @@
                         <option value="Celular">Celular</option>
                         <option value="Fijo">Fijo</option>
                     </select>
-                </div>        
-                <div style="width:90%;;margin-left:30px;" align="center">
-                    <button class="btn btn-primary">Guardar</button>
                 </div>
-            </form>
         </div>
         <div style="width:80%;;margin-left:320px;" align="center">
-            <button class="btn btn-success" onclick="window.location.href='/client/control';">Volver</button>
+            <button class="btn btn-primary">Guardar</button>
         </div>
+        </form>
+        <br>
+        <div style="width:80%;;margin-left:320px;" align="center">
+            <button class="btn btn-success" onclick="window.location.href='/supplier/control';">Volver</button>
+        </div>
+    </div>
     </div>
 </body>
