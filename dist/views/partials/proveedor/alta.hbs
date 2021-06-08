@@ -1,9 +1,27 @@
+<script type="text/javascript">
+    function muestraTelefono(id) {
+        if (document.getElementById(id).style.display == "none")
+            document.getElementById(id).style.display = "";
+    }
+    function ocultaTelefono(id) {
+        if (document.getElementById(id).style.display == "")
+            document.getElementById(id).style.display = "none";
+    }
+    function muestraTelefono1(id) {
+        if (document.getElementById(id).style.display == "none")
+            document.getElementById(id).style.display = "";
+    }
+    function ocultaTelefono1(id) {
+        if (document.getElementById(id).style.display == "")
+            document.getElementById(id).style.display = "none";
+    }
+</script>
 <body style="background-color: #d1ffe2;">
     <div class="contenedor">
         <div class="container p-4">
             <br>
             <form action="/supplier/add/{{proveedor.Id}}" method="POST" style="width:70%;;margin-left:300px;">
-                 <div class="form-group">
+                <div class="form-group">
                     <h3>Alta Proveedor</h3>
                 </div>
                 <div class="form-group">
@@ -18,7 +36,8 @@
                 </div>
                 <div class="form-group">
                     <label>Número de Documento</label>
-                    <input type="number" class="form-control" name="NumeroDocumento" placeholder="Numero Documento" required>                    
+                    <input type="number" class="form-control" name="NumeroDocumento" placeholder="Numero Documento"
+                        required>
                 </div>
                 <div class="form-group">
                     <label>Razón Social</label>
@@ -76,15 +95,41 @@
                 </div>
                 <div class="form-group">
                     <label>Telefono</label>
-                    <input type="number" class="form-control" name="Numero" placeholder="Numero" required>                    
-                </div>
-                <div class="form-group">                    
+                    <input type="number" class="form-control" name="Numero" placeholder="Numero" required>
                     <label>Tipo</label>
                     <select class="form-control" name="Tipo" required>
                         <option value="">Seleccionar</option>
                         <option value="Celular">Celular</option>
                         <option value="Fijo">Fijo</option>
                     </select>
+                    <div onClick="muestraTelefono('muestraTelefono')" style="cursor:pointer;display: inline;">[+]</div>
+                </div>
+                <div id="muestraTelefono" style="display: none">
+                    <div class="form-group">
+                        <label>Telefono</label>
+                        <input type="number" class="form-control" name="Numero1" placeholder="Numero" required>
+                        <label>Tipo</label>
+                        <select class="form-control" name="Tipo1" required>
+                            <option value="">Seleccionar</option>
+                            <option value="Celular">Celular</option>
+                            <option value="Fijo">Fijo</option>
+                        </select>
+                        <div onClick="muestraTelefono1('muestraTelefono1')" style="cursor:pointer;display: inline;">[+]</div>
+                        <div onClick="ocultaTelefono('muestraTelefono')" style="cursor:pointer;display:inline;">[-]</div>
+                    </div>
+                </div>
+                <div id="muestraTelefono1" style="display: none">
+                    <div class="form-group">
+                        <label>Telefono</label>
+                        <input type="number" class="form-control" name="Numero2" placeholder="Numero" required>
+                        <label>Tipo</label>
+                        <select class="form-control" name="Tipo2" required>
+                            <option value="">Seleccionar</option>
+                            <option value="Celular">Celular</option>
+                            <option value="Fijo">Fijo</option>
+                        </select>                        
+                        <div onClick="ocultaTelefono('muestraTelefono1')" style="cursor:pointer;display:inline;">[-]</div>
+                    </div>
                 </div>
         </div>
         <div style="width:80%;;margin-left:320px;" align="center">
@@ -95,6 +140,5 @@
         <div style="width:80%;;margin-left:320px;" align="center">
             <button class="btn btn-success" onclick="window.location.href='/supplier/control';">Volver</button>
         </div>
-    </div>
-    </div>
+    </div>    
 </body>
